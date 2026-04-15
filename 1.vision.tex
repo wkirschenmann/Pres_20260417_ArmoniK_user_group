@@ -25,88 +25,91 @@
 
 \begin{frame}{Production Ready}
 	\begin{itemize}
-		\item \textbf{Security by Architecture:} The platform enforces a strict separation between the Control Plane, Data Plane, and Compute Plane. The Control Plane never accesses user data directly and is limited to orchestration, scheduling, and metadata management. This clear trust boundary simplifies compliance, auditability, and enables safe operation as a managed service across multiple environments.
-		\item \textbf{High Availability \& Disaster Recovery:} The system is designed without single points of failure. Regional outages are handled through controlled failover, with durable data preserved and compute workloads safely recovered. Recovery procedures are automated and designed to minimize operational risk and downtime.
-		\item \textbf{Horizontal Scalability:} All core components are designed to scale horizontally. Stateless control functions allow the platform to handle large workloads with predictable behavior under high concurrency and production-scale conditions.
-		\item \textbf{Robust Error Handling:} The orchestration layer relies on idempotent operations and well-defined state transitions, ensuring correctness under retries, partial failures, and infrastructure churn. Continuous validation and non-regression testing ensure production stability over time.
-		\item \textbf{Enterprise-Grade Identity \& Governance:} Production readiness includes strong identity integration, role separation, and auditability, enabling secure multi-tenant usage and clear operational responsibilities.
+		\item \textbf{Security by Architecture:} Strict separation of Control, Data, and Compute Planes
+		\item \textbf{High Availability:} No single point of failure, automated failover and recovery
+		\item \textbf{Horizontal Scalability:} Stateless components scale out under high concurrency
+		\item \textbf{Robust Error Handling:} Idempotent operations with well-defined state transitions
+		\item \textbf{Enterprise Governance:} Identity integration, role separation, and auditability
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Easy to Use \& Deploy}
 	\begin{itemize}
-		\item \textbf{Flexible Deployment Models:} ArmoniK supports multiple operating models, ranging from fully managed services to self-operated deployments. This flexibility allows organizations to adopt the platform according to their operational maturity and governance constraints.
-		\item \textbf{Low-Frictions Onboarding:} The platform is designed to be consumed as a service, with automated provisioning, standardized configurations, and clear operational boundaries that reduce time-to-value.
-		\item \textbf{Declarative Configuration:} Infrastructure and execution domains are defined declaratively, enabling repeatable, auditable deployments and reducing configuration drift across environments.
-		\item \textbf{Developer-Centric APIs and SDKs:} Application teams interact with ArmoniK through multi-language SDKs that abstract orchestration complexity, allowing developers to focus on application logic rather than infrastructure mechanics.
-		\item \textbf{Reduced Operational Burden:} Clear separation of responsibilities, comprehensive documentation, and standardized lifecycle management simplify both initial deployment and long-term operations.
+		\item \textbf{Flexible Deployment:} From fully managed to self-operated
+		\item \textbf{Low-Friction Onboarding:} Automated provisioning and standardized configurations
+		\item \textbf{Declarative Configuration:} Repeatable, auditable, drift-free deployments
+		\item \textbf{Developer-Centric SDKs:} Multi-language APIs that abstract orchestration complexity
+		\item \textbf{Reduced Operational Burden:} Clear responsibilities and comprehensive documentation
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Fault Tolerant}
 	\begin{itemize}
-		\item \textbf{Automatic Task Recovery:} Task execution is resilient to infrastructure failures. Interrupted or lost executions are automatically retried or rescheduled without user intervention, ensuring progress despite partial outages.
-		\item \textbf{Checkpointing and Resumability:} Long-running tasks can periodically persist execution state, enabling efficient resumption after failures instead of full re-execution.
-		\item \textbf{Graceful Degradation:} Core services can restart, rescale, or temporarily degrade without impacting overall system correctness or already-running workloads.
-		\item \textbf{Failure Isolation:} Failures are contained within well-defined boundaries (regions, partitions, execution domains), preventing cascading effects across the system.
-		\item \textbf{Idempotent Control Interfaces:} All orchestration actions are designed to be safely repeatable, guaranteeing consistent outcomes even under retries and transient errors.
+		\item \textbf{Automatic Recovery:} Failed tasks are retried or rescheduled transparently
+		\item \textbf{Checkpointing:} Persist task execution state for efficient resumption after failures
+		\item \textbf{Graceful Degradation:} Services restart without impacting running workloads
+		\item \textbf{Failure Isolation:} Contained within regions, partitions, and execution domains
+		\item \textbf{Idempotent Operations:} Safe retries with consistent outcomes
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Observable}
 	\begin{itemize}
-		\item \textbf{End-to-End Visibility:} The platform exposes detailed telemetry across task execution, scheduling decisions, and system health, enabling operators to understand system behavior at all levels.
-		\item \textbf{Functional Observability:} Beyond infrastructure metrics, ArmoniK captures workload-level characteristics such as task graphs, critical paths, and execution structure, enabling meaningful performance analysis.
-		\item \textbf{Unified Operational View:} Observability data is correlated across control, compute, and data domains, providing a coherent picture of distributed execution.
-		\item \textbf{Business-Oriented Metrics:} Users can enrich observability with domain-specific metrics and tags, bridging the gap between technical execution and business outcomes.
-		\item \textbf{Towards Intelligent Insight:} The long-term vision includes automated anomaly detection and intelligent diagnostics to help operators and users understand issues faster and more intuitively.
+		\item \textbf{End-to-End Visibility:} Telemetry across scheduling, execution, and system health
+		\item \textbf{Functional Observability:} Task graphs, critical paths, and execution structure
+		\item \textbf{Unified View:} Correlated data across control, compute, and data domains
+		\item \textbf{Business Metrics:} Domain-specific tags bridging execution and business outcomes
+		\item \textbf{Intelligent Insight:} Automated anomaly detection and diagnostics
+        \item \textbf{Custom Instrumentation:} User-defined metrics and tracing for domain-specific observability, also available to tasks during  execution to adapt behavior based on runtime conditions
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Malleable}
 	\begin{itemize}
-		\item \textbf{Elastic Resource Usage:} ArmoniK dynamically adapts resource consumption to workload demand, scaling execution capacity up or down as conditions evolve.
-		\item \textbf{Runtime Reconfiguration:} Execution domains can be created, resized, or reconfigured dynamically, without requiring system restarts or service disruption.
-		\item \textbf{Malleability on Fixed Infrastructure:} Even in static or reserved environments, the platform adjusts active resource usage over time, avoiding idle capacity and improving overall efficiency.
-		\item \textbf{Policy-Driven Trade-offs:} Scaling behavior can balance performance, cost, and fairness objectives, adapting to different operational priorities.
-		\item \textbf{Predictive Adaptation (Vision):} Future evolution includes proactive scaling based on workload patterns, allowing the system to anticipate demand rather than react to it.
+		\item \textbf{Elastic Resources:} Scale execution capacity up or down with workload demand
+		\item \textbf{Runtime Reconfiguration:} Resize execution domains without restarts
+		\item \textbf{Fixed Infrastructure:} Adjust active resource usage to avoid idle capacity
+		\item \textbf{Policy-Driven:} Balance performance, cost, and fairness objectives
+		\item \textbf{Predictive Adaptation:} Proactive scaling based on workload patterns
+        \item \textbf{Resource Sharing:} Seamless workload distribution across environments based on resource availability and policy constraints
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Portable}
 	\begin{itemize}
-		\item \textbf{Multi-Environment Execution:} ArmoniK is designed to run consistently across cloud platforms, on-premises clusters, bare-metal infrastructures, and supercomputing environments.
-		\item \textbf{Infrastructure-Agnostic Orchestration:} The orchestration model abstracts away infrastructure specifics, treating resources as a logical pool regardless of where they physically reside.
-		\item \textbf{Hybrid and Multi-Cloud Capabilities:} Workloads can be distributed across heterogeneous environments, enabling hybrid execution and controlled workload bursting.
-		\item \textbf{Standards-Oriented Design:} Alignment with open distributed computing standards promotes application portability and reduces ecosystem lock-in.
+		\item \textbf{Multi-Environment:} Cloud, on-premises, bare-metal, and supercomputing
+		\item \textbf{Infrastructure-Agnostic:} Resources treated as a logical pool
+		\item \textbf{Hybrid \& Multi-Cloud:} Distribute workloads across heterogeneous environments
+		\item \textbf{Standards-Oriented:} Open standards to reduce ecosystem lock-in
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Data Aware}
 	\begin{itemize}
-		\item \textbf{Native Task--Data Awareness:} Scheduling decisions take into account data dependencies and reuse opportunities, reducing unnecessary data movement.
-		\item \textbf{Locality-Aware Execution:} The platform favors execution close to data when beneficial, while still balancing load and fairness across resources.
-		\item \textbf{Proactive Data Placement:} Data can be replicated or staged ahead of execution to align with anticipated compute placement.
-		\item \textbf{Flexible Data Dependencies:} Different classes of data dependencies (mandatory, optional, on-demand) allow more efficient scheduling and execution strategies.
-		\item \textbf{Controlled Data Lifecycle:} Data ownership, locality, and retention are managed explicitly, ensuring compliance and predictability across distributed environments.
+		\item \textbf{Task--Data Awareness:} Scheduling accounts for data dependencies and reuse
+		\item \textbf{Locality-Aware:} Execute close to data, balancing load and fairness
+		\item \textbf{Proactive Placement:} Stage data ahead of anticipated compute needs
+		\item \textbf{Flexible Dependencies:} Mandatory, optional, and on-demand data classes
+		\item \textbf{Controlled Lifecycle:} Explicit ownership, locality, and retention management
+        \item \textbf{Migration across clusters:} Seamless data movement and task rescheduling across environments to optimize for performance, cost, and policy constraints
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Performant}
 	\begin{itemize}
-		\item \textbf{Low-Latency Orchestration:} Task dispatch and scheduling paths are optimized to minimize coordination overhead and reduce critical-path latency.
-		\item \textbf{Pipeline Parallelism:} Data transfers and computation are overlapped whenever possible, keeping compute resources busy and reducing idle time.
-		\item \textbf{Scalability at High Concurrency:} The platform is designed to sustain high task throughput and large worker counts with predictable behavior.
-		\item \textbf{Efficient Resource Utilization:} Autoscaling and scheduling policies aim to maximize useful work while minimizing waste and contention.
-		\item \textbf{Decoupled Architecture:} Reduced coupling between components improves throughput, fault isolation, and overall system efficiency.
+		\item \textbf{Low-Latency Orchestration:} Minimized coordination overhead on the critical path
+		\item \textbf{Pipeline Parallelism:} Overlap data transfers and computation
+		\item \textbf{High Concurrency:} Sustained throughput with large worker counts
+		\item \textbf{Efficient Utilization:} Autoscaling to maximize useful work, minimize waste
+		\item \textbf{Decoupled Architecture:} Loose coupling for throughput and fault isolation
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Open Source}
 	\begin{itemize}
-		\item \textbf{Transparency and Trust:} Open-source availability allows users to inspect, audit, and understand the platform’s behavior, fostering trust in production usage.
-		\item \textbf{Extensibility and Adaptability:} Organizations can extend or adapt the platform to domain-specific needs, from custom scheduling logic to specialized integrations.
-		\item \textbf{Alignment with Open Ecosystems:} Integration with open standards and ecosystems promotes portability and long-term sustainability.
-		\item \textbf{Community-Driven Evolution:} A collaborative development model encourages shared innovation, faster iteration, and reduced dependency on a single vendor.
+		\item \textbf{Transparency:} Inspect, audit, and understand platform behavior
+		\item \textbf{Extensibility:} Adapt to domain-specific needs and custom integrations
+		\item \textbf{Open Ecosystems:} Standards-based portability and long-term sustainability
+		\item \textbf{Community-Driven:} Shared innovation, faster iteration, no vendor lock-in
 	\end{itemize}
 \end{frame}
