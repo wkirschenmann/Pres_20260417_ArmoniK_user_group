@@ -18,6 +18,7 @@
 		\item \textbf{Portable}, with support for multiple platforms and cloud providers.
 		\item \textbf{Data aware}, with support for data locality and efficient data management.
 		\item \textbf{Performant}, with support for high-throughput and high-volume task execution.
+		\item \textbf{Smart scheduling}, with priority, preemption, and heterogeneous resource placement.
 		\item \textbf{Open source}, with a vibrant community of users and contributors.
 	\end{itemize}
 \end{frame}
@@ -26,9 +27,11 @@
 \begin{frame}{Production Ready}
 	\begin{itemize}
 		\item \textbf{Security by Architecture:} Strict separation of Control, Data, and Compute Planes
+		\item \textbf{Data Protection:} Encryption at rest and in transit, secure secret injection for workers
 		\item \textbf{High Availability:} No single point of failure, automated failover and recovery
 		\item \textbf{Horizontal Scalability:} Stateless components scale out under high concurrency
 		\item \textbf{Robust Error Handling:} Idempotent operations with well-defined state transitions
+		\item \textbf{Multi-Tenancy:} Tenant isolation, per-tenant quotas, and noisy-neighbor prevention
 		\item \textbf{Enterprise Governance:} Identity integration, role separation, and auditability
 	\end{itemize}
 \end{frame}
@@ -39,6 +42,8 @@
 		\item \textbf{Low-Friction Onboarding:} Automated provisioning and standardized configurations
 		\item \textbf{Declarative Configuration:} Repeatable, auditable, drift-free deployments
 		\item \textbf{Developer-Centric SDKs:} Multi-language APIs that abstract orchestration complexity
+		\item \textbf{Local Dev \& Test:} Run and debug tasks locally before deploying to the cluster
+		\item \textbf{Worker Versioning:} Canary rollouts, rollback, and side-by-side version coexistence
 		\item \textbf{Reduced Operational Burden:} Clear responsibilities and comprehensive documentation
 	\end{itemize}
 \end{frame}
@@ -60,7 +65,8 @@
 		\item \textbf{Unified View:} Correlated data across control, compute, and data domains
 		\item \textbf{Business Metrics:} Domain-specific tags bridging execution and business outcomes
 		\item \textbf{Intelligent Insight:} Automated anomaly detection and diagnostics
-        \item \textbf{Custom Instrumentation:} User-defined metrics and tracing for domain-specific observability, also available to tasks during  execution to adapt behavior based on runtime conditions
+		\item \textbf{Custom Instrumentation:} User-defined metrics and tracing for domain-specific observability, also available to tasks during execution to adapt behavior based on runtime conditions
+		\item \textbf{Metering \& Cost Attribution:} Per-tenant usage tracking for billing and chargeback
 	\end{itemize}
 \end{frame}
 
@@ -81,17 +87,17 @@
 		\item \textbf{Infrastructure-Agnostic:} Resources treated as a logical pool
 		\item \textbf{Hybrid \& Multi-Cloud:} Distribute workloads across heterogeneous environments
 		\item \textbf{Standards-Oriented:} Open standards to reduce ecosystem lock-in
+		\item \textbf{Data Sovereignty:} Compliance-aware placement respecting residency requirements
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Data Aware}
 	\begin{itemize}
-		\item \textbf{Task--Data Awareness:} Scheduling accounts for data dependencies and reuse
-		\item \textbf{Locality-Aware:} Execute close to data, balancing load and fairness
-		\item \textbf{Proactive Placement:} Stage data ahead of anticipated compute needs
-		\item \textbf{Flexible Dependencies:} Mandatory, optional, and on-demand data classes
+		\item \textbf{Data-Driven Scheduling:} Task placement decisions account for data locality, dependencies, and reuse to minimize data movement
+		\item \textbf{Proactive Placement:} Replicate or stage data ahead of execution based on the task graph structure
+		\item \textbf{Flexible Dependencies:} Mandatory, optional, and on-demand data classes enabling fine-grained scheduling trade-offs
 		\item \textbf{Controlled Lifecycle:} Explicit ownership, locality, and retention management
-        \item \textbf{Migration across clusters:} Seamless data movement and task rescheduling across environments to optimize for performance, cost, and policy constraints
+		\item \textbf{Cross-Cluster Migration:} Move data and reschedule tasks across environments for performance, cost, and compliance
 	\end{itemize}
 \end{frame}
 
@@ -102,6 +108,17 @@
 		\item \textbf{High Concurrency:} Sustained throughput with large worker counts
 		\item \textbf{Efficient Utilization:} Autoscaling to maximize useful work, minimize waste
 		\item \textbf{Decoupled Architecture:} Loose coupling for throughput and fault isolation
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Smart Scheduling}
+	\begin{itemize}
+		\item \textbf{Data-Aware Placement:} Co-locate tasks with their data to reduce transfer overhead
+		\item \textbf{Priority \& Preemption:} Urgent tasks preempt batch work with configurable policies
+		\item \textbf{Heterogeneous Compute:} GPU, accelerator, and NUMA-aware resource matching
+		\item \textbf{Pluggable Policies:} Fair-share, backfill, gang scheduling, deadline-aware
+		\item \textbf{DAG Optimizations:} Critical-path scheduling, task fusion, and speculative execution
+		\item \textbf{Cost-Aware Decisions:} Task duration and resource prediction inform placement and scaling
 	\end{itemize}
 \end{frame}
 
