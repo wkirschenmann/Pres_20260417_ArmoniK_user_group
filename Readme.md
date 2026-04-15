@@ -23,7 +23,7 @@ git submodule add git@github.com:aneoconsulting/ArmoniK.BeamerTemplate.git Templ
 ## Building
 
 ```sh
-latexmk
+latexmk presentation.tex
 ```
 
 This compiles the presentation with LuaLaTeX (configured in `.latexmkrc`).
