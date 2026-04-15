@@ -9,31 +9,94 @@
 \end{frame}
 
 \begin{frame}{ArmoniK's envisioned capabilities}
-	\begin{itemize}
-		\item \textbf{Production ready}, with support for security, scalability, and reliability.
-		\item \textbf{Easy to use and deploy}, with a user-friendly interface and comprehensive documentation.
-		\item \textbf{Fault tolerant}, with support for automatic recovery and rescheduling of failed tasks.
-		\item \textbf{Observable}, with support for monitoring and logging of task execution.
-		\item \textbf{Malleable}, with support for dynamic resource allocation.
-		\item \textbf{Portable}, with support for multiple platforms and cloud providers.
-		\item \textbf{Data aware}, with support for data locality and efficient data management.
-		\item \textbf{Performant}, with support for high-throughput and high-volume task execution.
-		\item \textbf{Smart scheduling}, with priority, preemption, and heterogeneous resource placement.
-		\item \textbf{Open source}, with a vibrant community of users and contributors.
-	\end{itemize}
+	\vspace{0.15cm}\centering
+	\begin{tikzpicture}[
+			b/.style={rectangle, rounded corners=4pt, fill=aneoblue, text=white,
+					font=\small\bfseries, minimum width=5.0cm, minimum height=0.75cm,
+					align=center},
+			bo/.style={b, fill=aneoorange, text=aneoblack}
+		]
+		\node[b]  at (0, 0.00) {Production Ready};
+		\node[b]  at (0,-0.95) {Fault Tolerant};
+		\node[b]  at (0,-1.90) {Malleable};
+		\node[bo] at (0,-2.85) {Data Aware};
+		\node[bo] at (0,-3.80) {Smart Scheduling};
+		\node[b]  at (5.4, 0.00) {Easy to Use \& Deploy};
+		\node[b]  at (5.4,-0.95) {Observable};
+		\node[b]  at (5.4,-1.90) {Portable};
+		\node[b]  at (5.4,-2.85) {Performant};
+		\node[b]  at (5.4,-3.80) {Open Source};
+
+		% Legend
+		\node[b,   minimum width=0.75cm, minimum height=0.45cm] at (0.80, -4.65) {};
+		\node[anchor=west, font=\tiny, text=aneoblack] at (1.25, -4.65) {Foundation capabilities};
+		\node[bo,  minimum width=0.75cm, minimum height=0.45cm] at (4.40, -4.65) {};
+		\node[anchor=west, font=\tiny, text=aneoblack] at (4.85, -4.65) {Key differentiators};
+	\end{tikzpicture}
+
+	\note
+	{
+		\begin{itemize}
+			\item \textbf{Production ready}, with support for security, scalability, and reliability.
+			\item \textbf{Easy to use and deploy}, with a user-friendly interface and comprehensive documentation.
+			\item \textbf{Fault tolerant}, with support for automatic recovery and rescheduling of failed tasks.
+			\item \textbf{Observable}, with support for monitoring and logging of task execution.
+			\item \textbf{Malleable}, with support for dynamic resource allocation.
+			\item \textbf{Portable}, with support for multiple platforms and cloud providers.
+			\item \textbf{Data aware}, with support for data locality and efficient data management.
+			\item \textbf{Performant}, with support for high-throughput and high-volume task execution.
+			\item \textbf{Smart scheduling}, with priority, preemption, and heterogeneous resource placement.
+			\item \textbf{Open source}, with a vibrant community of users and contributors.
+		\end{itemize}
+	}
+
 \end{frame}
 
 
 \begin{frame}{Production Ready}
-	\begin{itemize}
-		\item \textbf{Security by Architecture:} Strict separation of Control, Data, and Compute Planes
-		\item \textbf{Data Protection:} Encryption at rest and in transit, secure secret injection for workers
-		\item \textbf{High Availability:} No single point of failure, automated failover and recovery
-		\item \textbf{Horizontal Scalability:} Stateless components scale out under high concurrency
-		\item \textbf{Robust Error Handling:} Idempotent operations with well-defined state transitions
-		\item \textbf{Multi-Tenancy:} Tenant isolation, per-tenant quotas, and noisy-neighbor prevention
-		\item \textbf{Enterprise Governance:} Identity integration, role separation, and auditability
-	\end{itemize}
+	\centering\vspace{0.2cm}
+	\begin{tikzpicture}[
+			card/.style={rectangle, rounded corners=5pt, text width=4.8cm,
+					align=left, inner sep=8pt, minimum width=5.5cm, minimum height=2.4cm}
+		]
+		\node[card, fill=aneoblue!12, draw=aneoblue!35] at (0, 0) {%
+		{\footnotesize\bfseries\color{aneoblue}Security}\\[3pt]
+		{\tiny\color{aneoblack}• Strict separation of Control, Data, and Compute Planes}\\[1pt]
+		{\tiny\color{aneoblack}• Encryption at rest and in transit}\\[1pt]
+		{\tiny\color{aneoblack}• Secure secret injection for workers}%
+		};
+		\node[card, fill=aneoturquoise!15, draw=aneoturquoise!40] at (6.0, 0) {%
+		{\footnotesize\bfseries\color{aneoturquoise!80!black}Reliability}\\[3pt]
+		{\tiny\color{aneoblack}• No single point of failure, automated failover}\\[1pt]
+		{\tiny\color{aneoblack}• Idempotent operations with well-defined state transitions}\\[1pt]
+		{\tiny\color{aneoblack}• Robust error handling under retries and failures}%
+		};
+		\node[card, fill=aneoorange!12, draw=aneoorange!35] at (0, -2.9) {%
+		{\footnotesize\bfseries\color{aneoorange!80!black}Scalability}\\[3pt]
+		{\tiny\color{aneoblack}• Stateless components scale out under high concurrency}\\[1pt]
+		{\tiny\color{aneoblack}• Predictable behaviour at production scale}\\[1pt]
+		{\tiny\color{aneoblack}• Rate limiting and throttling per tenant}%
+		};
+		\node[card, fill=aneoblue!8, draw=aneoblue!25] at (6.0, -2.9) {%
+		{\footnotesize\bfseries\color{aneoblue!70!black}Enterprise}\\[3pt]
+		{\tiny\color{aneoblack}• Tenant isolation, per-tenant quotas, noisy-neighbor prevention}\\[1pt]
+		{\tiny\color{aneoblack}• Identity integration and role separation}\\[1pt]
+		{\tiny\color{aneoblack}• Auditability and governance}%
+		};
+	\end{tikzpicture}
+
+	\note
+	{
+		\begin{itemize}
+			\item \textbf{Security by Architecture:} Strict separation of Control, Data, and Compute Planes
+			\item \textbf{Data Protection:} Encryption at rest and in transit, secure secret injection for workers
+			\item \textbf{High Availability:} No single point of failure, automated failover and recovery
+			\item \textbf{Horizontal Scalability:} Stateless components scale out under high concurrency
+			\item \textbf{Robust Error Handling:} Idempotent operations with well-defined state transitions
+			\item \textbf{Multi-Tenancy:} Tenant isolation, per-tenant quotas, and noisy-neighbor prevention
+			\item \textbf{Enterprise Governance:} Identity integration, role separation, and auditability
+		\end{itemize}
+	}
 \end{frame}
 
 \begin{frame}{Easy to Use \& Deploy}
@@ -49,13 +112,56 @@
 \end{frame}
 
 \begin{frame}{Fault Tolerant}
-	\begin{itemize}
-		\item \textbf{Automatic Recovery:} Failed tasks are retried or rescheduled transparently
-		\item \textbf{Checkpointing:} Persist task execution state for efficient resumption after failures
-		\item \textbf{Graceful Degradation:} Services restart without impacting running workloads
-		\item \textbf{Failure Isolation:} Contained within regions, partitions, and execution domains
-		\item \textbf{Idempotent Operations:} Safe retries with consistent outcomes
-	\end{itemize}
+	\begin{columns}[T]
+		\begin{column}{0.52\textwidth}
+			\begin{figure}
+				\centering\vspace{0.3cm}
+				\begin{tikzpicture}[
+						st/.style={rectangle, rounded corners=4pt, font=\footnotesize\bfseries,
+								minimum width=1.8cm, minimum height=0.6cm, align=center},
+						ok/.style={st, fill=aneoturquoise!30, draw=aneoturquoise!70, text=aneoblack},
+						fail/.style={st, fill=aneoorange!25, draw=aneoorange!80, text=aneoblack},
+						arr/.style={-Stealth, thick},
+						lab/.style={font=\tiny\itshape, text=aneoblack!60}
+					]
+					\node[ok]   (run)  at (0,0)      {Running};
+					\node[fail] (fail) at (3.2,0)    {Failed};
+					\node[ok]   (sch)  at (1.6,-1.6) {Rescheduled};
+
+					\draw[arr, aneoblue!70] (-1.6,0) -- (run.west)
+					node[midway, above, lab] {submitted};
+					\draw[arr, aneoorange!90] (run.east) -- (fail.west)
+					node[midway, above, lab, text=aneoorange!80] {failure};
+					\draw[arr, aneoorange!90] (fail.south) -- (sch.east)
+					node[midway, right, lab] {detected};
+					\draw[arr, aneoblue!70] (sch.west) -- (run.south)
+					node[midway, left, lab] {retry};
+				\end{tikzpicture}
+				\caption*{Automatic Recovery}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\vspace{0.5cm}
+			\begin{itemize}
+				\item \textbf{Checkpointing:} Persist task state for efficient resumption
+				\item \textbf{Failure Isolation:} Failures contained to domains (clusters, partitions, workers) without cascading effects
+				\item \textbf{Idempotent Operations:} Safe retries with consistent outcomes
+				\item \textbf{Graceful Degradation:} Services restart without impact on running workloads
+			\end{itemize}
+		\end{column}
+	\end{columns}
+
+	\note
+	{
+		\begin{itemize}
+			\item \textbf{Automatic Recovery:} Failed tasks are retried or rescheduled transparently
+			\item \textbf{Checkpointing:} Persist task execution state for efficient resumption after failures
+			\item \textbf{Failure Isolation:} Failures contained to domains (clusters, partitions, workers) without cascading effects
+			\item \textbf{Idempotent Operations:} Safe retries with consistent outcomes
+			\item \textbf{Graceful Degradation:} Services restart without impacting running workloads
+		\end{itemize}
+	}
+
 \end{frame}
 
 \begin{frame}{Observable}
@@ -77,7 +183,7 @@
 		\item \textbf{Fixed Infrastructure:} Adjust active resource usage to avoid idle capacity
 		\item \textbf{Policy-Driven:} Balance performance, cost, and fairness objectives
 		\item \textbf{Predictive Adaptation:} Proactive scaling based on workload patterns
-        \item \textbf{Resource Sharing:} Seamless workload distribution across environments based on resource availability and policy constraints
+		\item \textbf{Resource Sharing:} Seamless workload distribution across environments based on resource availability and policy constraints
 	\end{itemize}
 \end{frame}
 
@@ -92,13 +198,74 @@
 \end{frame}
 
 \begin{frame}{Data Aware}
-	\begin{itemize}
-		\item \textbf{Data-Driven Scheduling:} Task placement decisions account for data locality, dependencies, and reuse to minimize data movement
-		\item \textbf{Proactive Placement:} Replicate or stage data ahead of execution based on the task graph structure
-		\item \textbf{Flexible Dependencies:} Mandatory, optional, and on-demand data classes enabling fine-grained scheduling trade-offs
-		\item \textbf{Controlled Lifecycle:} Explicit ownership, locality, and retention management
-		\item \textbf{Cross-Cluster Migration:} Move data and reschedule tasks across environments for performance, cost, and compliance
-	\end{itemize}
+	\begin{columns}[T]
+		\begin{column}{0.48\textwidth}
+			\centering\vspace{0.2cm}
+			\begin{tikzpicture}[
+					tn/.style={rectangle, rounded corners=3pt, fill=aneoblue, text=white,
+							font=\tiny\bfseries, minimum width=1.2cm, minimum height=0.45cm},
+					dn/.style={circle, fill=aneoorange, text=aneoblack,
+							font=\tiny\bfseries, minimum size=0.55cm},
+					site/.style={draw=aneoblue!30, dashed, fill=aneoblue!5, rounded corners=4pt},
+					arr/.style={-Stealth, thick},
+					lab/.style={font=\tiny\itshape}
+				]
+				% WITHOUT
+				\node[font=\tiny\bfseries, text=aneoorange] at (2.9, 0.85) {Without};
+				\draw[site] (0.2, 0.05) rectangle (1.9, -0.65);
+				\node[font=\tiny, text=aneoblue] at (1.05, 0.22) {Site A};
+				\node[dn] (d1) at (1.05, -0.3) {D};
+				\draw[site] (3.9, 0.05) rectangle (5.6, -0.65);
+				\node[font=\tiny, text=aneoblue] at (4.75, 0.22) {Site B};
+				\node[tn] (t1) at (4.75, -0.3) {Task};
+				\draw[aneoorange, thick, -Stealth] (d1.east) -- (t1.west)
+				node[midway, above, lab, text=aneoorange] {transfer};
+
+				% DIVIDER
+				\draw[aneoblack!20] (0.0, -0.85) -- (5.8, -0.85);
+
+				% WITH
+				\node[font=\tiny\bfseries, text=aneoturquoise!80!black] at (2.9, -1.1) {With};
+				\draw[site] (0.2, -1.3) rectangle (2.6, -2.1);
+				\node[font=\tiny, text=aneoblue] at (1.4, -1.13) {Site A};
+				\node[dn] (d2) at (0.85, -1.7) {D};
+				\node[tn] (t2) at (2.15, -1.7) {Task};
+				\draw[arr, aneoturquoise, very thick] (d2.east) -- (t2.west)
+				node[midway, above, lab, text=aneoturquoise] {local};
+				\draw[site] (3.2, -1.3) rectangle (5.6, -2.1);
+				\node[font=\tiny, text=aneoblue] at (4.4, -1.13) {Site B};
+				\node[dn] (d3) at (3.85, -1.7) {D};
+				\node[tn] (t3) at (5.15, -1.7) {Task};
+				\draw[arr, aneoturquoise, very thick] (d3.east) -- (t3.west)
+				node[midway, above, lab, text=aneoturquoise] {local};
+
+				\node[font=\tiny\itshape, text=aneoblack!50] at (2.9, -2.4)
+				{tasks placed where their data resides};
+			\end{tikzpicture}
+		\end{column}
+		\begin{column}{0.52\textwidth}
+			\vspace{0.4cm}
+			\begin{itemize}
+				\item \textbf{Data-Driven Scheduling:} Task placement accounts for data locality, dependencies, and reuse to minimize movement
+				\item \textbf{Proactive Placement:} Replicate or stage data ahead of execution based on the task graph
+				\item \textbf{Flexible Dependencies:} Mandatory, optional, and on-demand data classes for fine-grained scheduling
+				\item \textbf{Controlled Lifecycle:} Explicit ownership, locality, and retention management
+				\item \textbf{Cross-Cluster Migration:} Move data and tasks across environments for performance, cost, and compliance
+			\end{itemize}
+		\end{column}
+	\end{columns}
+
+	\note
+	{
+		\begin{itemize}
+			\item \textbf{Data-Driven Scheduling:} Task placement decisions account for data locality, dependencies, and reuse to minimize data movement
+			\item \textbf{Proactive Placement:} Replicate or stage data ahead of execution based on the task graph structure
+			\item \textbf{Flexible Dependencies:} Mandatory, optional, and on-demand data classes enabling fine-grained scheduling trade-offs
+			\item \textbf{Controlled Lifecycle:} Explicit ownership, locality, and retention management
+			\item \textbf{Cross-Cluster Migration:} Move data and reschedule tasks across environments for performance, cost, and compliance
+		\end{itemize}
+	}
+
 \end{frame}
 
 \begin{frame}{Performant}
@@ -112,14 +279,50 @@
 \end{frame}
 
 \begin{frame}{Smart Scheduling}
-	\begin{itemize}
-		\item \textbf{Data-Aware Placement:} Co-locate tasks with their data to reduce transfer overhead
-		\item \textbf{Priority \& Preemption:} Urgent tasks preempt batch work with configurable policies
-		\item \textbf{Heterogeneous Compute:} GPU, accelerator, and NUMA-aware resource matching
-		\item \textbf{Pluggable Policies:} Fair-share, backfill, gang scheduling, deadline-aware
-		\item \textbf{DAG Optimizations:} Critical-path scheduling, task fusion, and speculative execution
-		\item \textbf{Cost-Aware Decisions:} Task duration and resource prediction inform placement and scaling
-	\end{itemize}
+	\centering\vspace{0.1cm}
+	\begin{tikzpicture}[
+			inp/.style={rectangle, rounded corners=3pt, fill=aneoblue!10,
+					draw=aneoblue!30, text=aneoblack, font=\footnotesize\bfseries,
+					minimum width=3.2cm, minimum height=0.6cm, align=center},
+			sch/.style={rectangle, rounded corners=5pt, fill=aneoblue, text=white,
+					font=\small\bfseries, minimum width=2.4cm, minimum height=4.8cm,
+					align=center},
+			res/.style={rectangle, rounded corners=3pt, font=\footnotesize\bfseries,
+					minimum width=2.8cm, minimum height=0.65cm, align=center},
+			arr/.style={-Stealth, thick, aneoblue!70}
+		]
+		\node[inp] (dl) at (0, 2.1)  {Data Locality};
+		\node[inp] (pr) at (0, 0.7)  {Priority \& Preemption};
+		\node[inp] (he) at (0,-0.7)  {Heterogeneous Compute};
+		\node[inp] (dg) at (0,-2.1)  {DAG Structure};
+
+		\node[sch] (s)  at (3.8, 0)  {ArmoniK \\ Scheduler};
+
+		\node[res, fill=aneoturquoise!30, draw=aneoturquoise!70] (op) at (7.4, 0.9)
+		{Optimal Placement};
+		\node[res, fill=aneoorange!20, draw=aneoorange!60] (ca) at (7.4,-0.9)
+		{Cost-Aware Scaling};
+
+		\draw[arr] (dl.east) -- (s.west |- dl);
+		\draw[arr] (pr.east) -- (s.west |- pr);
+		\draw[arr] (he.east) -- (s.west |- he);
+		\draw[arr] (dg.east) -- (s.west |- dg);
+
+		\draw[-Stealth, thick, aneoturquoise!80] (s.east |- op) -- (op.west);
+		\draw[-Stealth, thick, aneoorange!80]    (s.east |- ca) -- (ca.west);
+	\end{tikzpicture}
+
+	\note
+	{
+		\begin{itemize}
+			\item \textbf{Data-Aware Placement:} Co-locate tasks with their data to reduce transfer overhead
+			\item \textbf{Priority \& Preemption:} Urgent tasks preempt batch work with configurable policies
+			\item \textbf{Heterogeneous Compute:} GPU, accelerator, and NUMA-aware resource matching
+			\item \textbf{Pluggable Policies:} Fair-share, backfill, gang scheduling, deadline-aware
+			\item \textbf{DAG Optimizations:} Critical-path scheduling, task fusion, and speculative execution
+			\item \textbf{Cost-Aware Decisions:} Task duration and resource prediction inform placement and scaling
+		\end{itemize}
+	}
 \end{frame}
 
 \begin{frame}{Open Source}
