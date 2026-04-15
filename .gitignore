@@ -1,0 +1,17 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.nav
+*.snm
+*.pdf
+*.toc
+*.bak*
+cache
+*.synctex.gz
+build
+*.synctex(busy)
+_minted-presentation
+.venv
+svg-inkscape
