@@ -1,2 +1,115 @@
+
 \section{ArmoniK has reached a mature state with production-ready features and a growing community.}
+
+
+
+
+
+\begin{frame}
+	\frametitle{Task-based Programming in ArmoniK}
+	\begin{block}{Definition}
+		Paradigm focusing on the decomposition of complex operations into smaller tasks
+	\end{block}
+	\begin{itemize}
+		\item Expression of complex data-driven dependencies
+		\item ArmoniK's \textbf{distributed scheduler} responsible for:
+		      \begin{itemize}
+			      \item Task distribution and load balancing
+			      \item Dependency resolution
+			      \item Tasks execution
+			      \item Data management (overlapping, prefetching, and checkpointing)
+		      \end{itemize}
+	\end{itemize}
+	\footnotesize
+	\inputminted{python}{task-based-programming.py}
+\end{frame}
+
+\begin{frame}
+	\frametitle{ArmoniK Programming Model}
+	\begin{columns}[T]
+		\begin{column}{0.5\textwidth}
+			\begin{itemize}
+				\item \textbf{Task Graph}: Bipartite DAG whose node sets are tasks and data
+				\item \textbf{Task node}: Single-node computation (possibly multi-threaded) taking one or several data inputs and outputting one or several data
+				\item \textbf{Data node}: Immutable piece of data depending on only one task at most
+				\item \textbf{Dependencies}: Dependencies between tasks are expressed as data dependencies
+				\item \textbf{Dynamic}: The graph may not be entirely known in advance (tasks can append tasks and replace edges with subgraphs)
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\centering
+			\includegraphics[width=0.95\textwidth]{mermaid-task-graph.png}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The Client-Worker Pattern}
+	\begin{columns}[T]
+		\begin{column}{0.5\textwidth}
+			\begin{itemize}
+				\item \textbf{Client}: User-developed software that submits the initial task graphs to ArmoniK and retrieves results
+				\item \textbf{Worker}: User-developed software capable of performing one or several tasks, depending on its implementation:
+				      \begin{itemize}
+					      \item Can take input data, perform calculations, and return a result
+					      \item Can submit new tasks and set the result as output of a new task
+				      \end{itemize}
+				\item \textbf{Synchronization via Data}: The client might not be aware that the task graph has been modified
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\centering
+			\includegraphics[width=0.95\textwidth]{mermaid-client-worker.png}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Dynamic Graph}
+	\begin{block}{Definition}
+		Dependency graph is not fully known when scheduling starts.
+	\end{block}
+	\begin{itemize}
+		\item Task dependencies not known before submission
+		\item Submissions can happen anytime
+		\item Tasks can submit new tasks
+		\item Tasks can delegate the production of their output to their new tasks
+	\end{itemize}
+	\footnotesize
+	\inputminted{python}{subtasking.py}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Dynamic Graph Example}
+	\begin{columns}[T]
+		\begin{column}{0.3\textwidth}
+			\centering
+			\vspace{1cm}
+			\vfill
+			\includegraphics[width=0.95\textwidth]{mermaid-dynamic-part1.png}
+		\end{column}
+		\begin{column}{0.05\textwidth}
+			\centering
+			\vspace{1.7cm}
+			\vfill
+			$\Rightarrow$
+		\end{column}
+		\begin{column}{0.65\textwidth}
+			\centering
+			\footnotesize
+			\includegraphics[width=0.95\textwidth]{mermaid-dynamic-part2.png}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
 \subsection{The latest release brings significant improvements in performance, scalability, and user experience.}
