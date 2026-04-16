@@ -1,2 +1,144 @@
 \section{Let us answer the questions you raised during registration and any new ones.}
-\subsection{How to migrate to the latest release?}
+
+\begin{frame}[fragile]{How to migrate to the latest release?}
+	\begin{columns}[T]
+		\begin{column}{0.4\textwidth}
+			\textbf{Breaking change: container UID enforcement}\\
+			{\footnotesize Recent releases enforce \texttt{runAsNonRoot} and a fixed \texttt{runAsUser} in the pod \texttt{securityContext}. Worker images running as \texttt{root} (UID~0) will be \textbf{rejected} by the admission controller.}
+			\vspace{2pt}
+			\begin{minted}[fontsize=\tiny,bgcolor=black!5,frame=single]{yaml}
+# Helm values — align securityContext
+worker:
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 5000
+    runAsGroup: 5000
+    fsGroup: 5000
+			\end{minted}
+		\end{column}
+		\begin{column}{0.6\textwidth}
+			\textbf{New partition configuration}\\
+			{\footnotesize Partitions are now declared as \textbf{indexed env vars} under
+			\texttt{InitServices\_\_Partitioning\_\_Partitions}, each holding a JSON string.}
+			\vspace{-1pt}
+			\begin{minted}[fontsize=\tiny,bgcolor=black!5,frame=single]{bash}
+# one var per partition (0-based index)
+InitServices__Partitioning__Partitions__0='{
+  "PartitionId":          "default",
+  "ParentPartitionIds":   [],
+  "PodReserved":          1,
+  "PodMax":               10,
+  "PreemptionPercentage": 50,
+  "Priority":             2,
+  "PodConfiguration":     {}
+}'
+InitServices__Partitioning__Partitions__1='{
+  "PartitionId":          "gpu",
+  ...
+}'
+			\end{minted}
+			{\footnotesize To \textbf{update} a partition: edit the var, then redeploy with\\
+			\mintinline{bash}{InitServices__InitDatabase=true}}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{How to use ArmoniK for scientific computing?}
+	\begin{columns}[T]
+		\begin{column}{0.48\textwidth}
+			\textbf{Typical patterns}
+			\begin{itemize}
+				\item \textbf{Parameter sweeps:} Submit thousands of independent simulations as tasks
+				\item \textbf{Monte Carlo:} Embarrassingly parallel — map tasks, aggregate results
+				\item \textbf{Iterative solvers:} Use sub-tasks to express iterations with dependencies recursively
+				\item \textbf{Finite element / finite difference:} Partition the domain, schedule sub-domains as tasks
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.52\textwidth}
+			\textbf{Practical tips}
+			\begin{itemize}
+				\item Use the \textbf{Python or C++} SDK to write worker logic for your simulations
+				\item Use \textbf{Python} to express task graphs with complex dependencies
+				\item Leverage \textbf{data locality} by using common dependencies when defining tasks
+				\item Package your solver in a \textbf{Docker image} as the worker
+				\item Enable \textbf{retries} — transient failures happen at scale
+				\item Monitor via Grafana dashboards bundled with ArmoniK
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{How to deploy ArmoniK on bare metal infrastructure?}
+	\begin{columns}[T]
+		\begin{column}{0.5\textwidth}
+			\textbf{Prerequisites}
+			\begin{itemize}
+				\item Docker and Docker Compose
+				\item Optional : A shared \textbf{storage backend} (Ceph, NFS, MinIO on-prem)
+				\item Optional : A \textbf{message queue} (ActiveMQ or RabbitMQ)
+				\item Optional : A \textbf{database} (MongoDB)
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\textbf{Deployment steps}
+			\begin{itemize}
+				\item Docker Compose: the deployment is not production-ready yet.
+				\item Configure the \texttt{docker-compose.yml} with your storage, message queue, and database settings
+				\item Start the services with \texttt{docker-compose up -d} on each node
+				\item Validate with the provided smoke-test job
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{How does ArmoniK compare to similar tools?}
+	\centering\vspace{0.1cm}
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lcccccc}
+			\hline
+			\textbf{Capability}      & \textbf{ArmoniK} & \textbf{Airflow} & \textbf{Ray/Dask} & \textbf{SLURM} & \textbf{DataSynapse} & \textbf{Symphony} \\
+			\hline
+			Fault-tolerant tasks     & \cmark           & partial          & partial           & partial        & \cmark               & \cmark            \\
+			Dynamic task graphs      & \cmark           & limited          & \cmark            & \xmark         & limited              & limited           \\
+			Multi-cluster / hybrid   & \cmark           & \xmark           & limited           & \xmark         & \cmark               & \cmark            \\
+			Data-aware scheduling    & \cmark           & \xmark           & partial           & \xmark         & partial              & partial           \\
+			Kubernetes-native        & \cmark           & \cmark           & \cmark            & \xmark         & \xmark               & \xmark            \\
+			Financial-grade security & \cmark           & \xmark           & \xmark            & \xmark         & \cmark               & \cmark            \\
+			Open source              & \cmark           & \cmark           & \cmark            & \cmark         & \xmark               & \xmark            \\
+			\hline
+		\end{tabular}
+	}
+	\vspace{0.15cm}
+	\begin{block}{ArmoniK's niche}
+		Production-grade orchestration for \textbf{long-running, fault-sensitive, high-volume} workloads in regulated or multi-site environments — where correctness and auditability matter as much as throughput.
+	\end{block}
+\end{frame}
+
+\begin{frame}{Technical skills requirements for ArmoniK users?}
+	\begin{columns}[T]
+		\begin{column}{0.5\textwidth}
+			\textbf{Core skills}
+			\begin{itemize}
+				\item \textbf{Kubernetes:} HELM, cluster administration, RBAC, namespaces
+				\item \textbf{Infrastructure as Code:} Terraform (modules, state, workspaces)
+				\item \textbf{Networking:} DNS, TLS, ingress, firewall rules, VPN/peering
+				\item \textbf{Storage:} object storage (S3-compatible), persistent volumes
+				\item \textbf{Identity \& Access:} OIDC / LDAP integration, certificate management
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\textbf{Operations skills}
+			\begin{itemize}
+				\item \textbf{Observability:} Prometheus, Grafana, log aggregation (ELK / managed services)
+				\item \textbf{Incident handling:} reading ArmoniK task states, diagnosing worker crashes, draining partitions
+				\item \textbf{Upgrade management:} rolling updates, schema migrations, rollback procedures
+				\item \textbf{Capacity planning:} autoscaler tuning, quota management, cost attribution
+			\end{itemize}
+		\end{column}
+	\end{columns}
+	\vspace{0.2cm}
+	\begin{alertblock}{Recommended team profile}
+		A DevOps / platform engineer with Kubernetes production experience.
+		Application teams do \emph{not} need these skills — they interact only through the SDK.
+	\end{alertblock}
+\end{frame}
