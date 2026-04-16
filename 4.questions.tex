@@ -83,8 +83,8 @@ InitServices__Partitioning__Partitions__1='{
 			\textbf{Deployment steps}
 			\begin{itemize}
 				\item Docker Compose: the deployment is not production-ready yet.
-				\item Configure the \texttt{docker-compose.yml} with your storage, message queue, and database settings
-				\item Start the services with \texttt{docker-compose up -d} on each node
+				\item Configure the \texttt{docker-compose.yml} with your worker, storage, message queue, and database settings
+				\item Start the services with \mintinline{bash}{docker-compose up -d} on each node
 				\item Validate with the provided smoke-test job
 			\end{itemize}
 		\end{column}
@@ -96,28 +96,29 @@ InitServices__Partitioning__Partitions__1='{
 	\resizebox{\textwidth}{!}{%
 		\begin{tabular}{lcccccc}
 			\hline
-			\textbf{Capability}      & \textbf{ArmoniK} & \textbf{Airflow} & \textbf{Ray/Dask} & \textbf{SLURM} & \textbf{DataSynapse} & \textbf{Symphony} \\
+			\textbf{Capability}                   & \textbf{ArmoniK} & \textbf{Airflow} & \textbf{Ray/Dask}  & \textbf{SLURM}     & \textbf{DataSynapse} & \textbf{Symphony}  \\
 			\hline
-			Fault-tolerant tasks     & \cmark           & partial          & partial           & partial        & \cmark               & \cmark            \\
-			Dynamic task graphs      & \cmark           & limited          & \cmark            & \xmark         & limited              & limited           \\
-			Multi-cluster / hybrid   & \cmark           & \xmark           & limited           & \xmark         & \cmark               & \cmark            \\
-			Data-aware scheduling    & \cmark           & \xmark           & partial           & \xmark         & partial              & partial           \\
-			Kubernetes-native        & \cmark           & \cmark           & \cmark            & \xmark         & \xmark               & \xmark            \\
-			Financial-grade security & \cmark           & \xmark           & \xmark            & \xmark         & \cmark               & \cmark            \\
-			Open source              & \cmark           & \cmark           & \cmark            & \cmark         & \xmark               & \xmark            \\
+			Fault-tolerant tasks                  & \cmark           & \cmark           & partial            & \cmark             & \cmark               & \cmark             \\
+			Dynamic task graphs                   & \cmark           & limited          & \cmark             & \xmark             & limited              & limited            \\
+			Multi-cluster / hybrid                & \cmark           & \cmark           & with data transfer & with data transfer & with data transfer   & with data transfer \\
+			Data-aware scheduling                 & \cmark           & \xmark           & partial            & \xmark             & partial              & partial            \\
+			Kubernetes-native                     & \cmark           & \cmark           & \cmark             & \xmark             & \xmark               & \xmark             \\
+			Financial-grade security              & \cmark           & \xmark           & \xmark             & \xmark             & \cmark               & \cmark             \\
+			Open-source                           & \cmark           & \cmark           & \cmark             & \cmark             & \xmark               & \xmark             \\
+			computation-communication overlapping & \cmark           & \xmark           & \xmark             & \xmark             & \xmark               & ??                 \\
 			\hline
 		\end{tabular}
 	}
 	\vspace{0.15cm}
 	\begin{block}{ArmoniK's niche}
-		Production-grade orchestration for \textbf{long-running, fault-sensitive, high-volume} workloads in regulated or multi-site environments — where correctness and auditability matter as much as throughput.
+		Production-grade orchestration for \textbf{dynamic, fault-sensitive, high-volume} workloads in regulated or multi-site environments — where correctness and auditability matter as much as throughput.
 	\end{block}
 \end{frame}
 
-\begin{frame}{Technical skills requirements for ArmoniK users?}
+\begin{frame}{Technical skills required for ArmoniK?}
 	\begin{columns}[T]
 		\begin{column}{0.5\textwidth}
-			\textbf{Core skills}
+			\textbf{Deployment skills}
 			\begin{itemize}
 				\item \textbf{Kubernetes:} HELM, cluster administration, RBAC, namespaces
 				\item \textbf{Infrastructure as Code:} Terraform (modules, state, workspaces)
@@ -137,8 +138,7 @@ InitServices__Partitioning__Partitions__1='{
 		\end{column}
 	\end{columns}
 	\vspace{0.2cm}
-	\begin{alertblock}{Recommended team profile}
-		A DevOps / platform engineer with Kubernetes production experience.
-		Application teams do \emph{not} need these skills — they interact only through the SDK.
+	\begin{alertblock}{Development skills}
+		To write workers and define task graphs, familiarity with the ArmoniK SDKs (Python, C++) and best practices for distributed application design is required.
 	\end{alertblock}
 \end{frame}
