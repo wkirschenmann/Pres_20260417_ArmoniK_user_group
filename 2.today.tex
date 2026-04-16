@@ -1,19 +1,23 @@
 
 \section{ArmoniK has reached a mature state with production-ready features and a growing community.}
 
-\begin{frame}{ArmoniK Architecture}
-	\centering\vspace{0.2cm}
-	\includegraphics[width=0.88\textwidth]{mermaid-simplifed-architecture.png}
-
-	\note
-	{
-		\begin{itemize}
-			\item \textbf{Control Plane:} Handles session and task lifecycle, scheduling, and state management
-			\item \textbf{Data Plane:} Object storage for task inputs, outputs, and intermediate results
-			\item \textbf{Compute Plane:} Stateless agents and workers that execute tasks and report results back
-			\item Strict separation of planes limits blast radius and enables independent scaling
-		\end{itemize}
-	}
+\begin{frame}
+	\frametitle{In Production Today}
+	\begin{itemize}
+		\item FSI
+		      \begin{itemize}
+			      \item \textbf{CACIB:} Several teams in production
+			      \item \textbf{Natixis:} Several teams soon in production
+			      \item Strong pipeline of POCs with edge funds and other european banks
+			            \note{Some are here with us today, feel free to ask them about their experience with ArmoniK!}
+		      \end{itemize}
+		\item Industry
+		      \begin{itemize}
+			      \item \textbf{CentraleSupelec:} Internship project on ArmoniK-based seismic imaging pipeline
+			      \item \textbf{EDF:} POC on ArmoniK-based data processing pipeline for nuclear fusion simulations
+			      \item \textbf{Automotive:} POC with a major car manufacturer
+		      \end{itemize}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Ecosystem \& Deployment}
@@ -21,7 +25,8 @@
 		\begin{column}{0.48\textwidth}
 			{\small\bfseries\color{aneoblue}SDKs \& APIs}\\[4pt]
 			\begin{itemize}
-				\item \textbf{SDKs}: C\#, C++, Java, Python (Pymonik)
+				\item \textbf{Interopable SDKs}: C\#, C++, Java
+				\item \textbf{Specific SDKs}: Python (Pymonik)
 				\item \textbf{APIs}: C\#, C++, Java, Rust, Javascript, Python
 				\item \textbf{gRPC}: any language
 			\end{itemize}
@@ -45,30 +50,11 @@
 			{\small\bfseries\color{aneoblue}Backend Adapters}\\[4pt]
 			\begin{itemize}
 				\item \textbf{Object Storage}: S3, MinIO, GCS
-				\item \textbf{Queue}: SQS, PubSub, Nats, RabbitMQ, ActiveMQ Artemis
-				\item \textbf{Database}: MongoDB
+				\item \textbf{Queue}: SQS, PubSub, Nats, RabbitMQ, ActiveMQ, Nats JetStream
+				\item \textbf{Database}: Percona MongoDB
 			\end{itemize}
 		\end{column}
 	\end{columns}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Usage : Task-based Programming in ArmoniK}
-	\begin{block}{Definition}
-		Paradigm focusing on the decomposition of complex operations into smaller tasks
-	\end{block}
-	\begin{itemize}
-		\item Expression of complex data-driven dependencies
-		\item ArmoniK's \textbf{distributed scheduler} responsible for:
-		      \begin{itemize}
-			      \item Task distribution and load balancing
-			      \item Dependency resolution
-			      \item Tasks execution
-			      \item Data management (overlapping, prefetching, and checkpointing)
-		      \end{itemize}
-	\end{itemize}
-	\footnotesize
-	\inputminted{python}{task-based-programming.py}
 \end{frame}
 
 \begin{frame}
@@ -91,29 +77,71 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{The Client-Worker Pattern}
-	\begin{columns}[T]
-		\begin{column}{0.5\textwidth}
-			\begin{itemize}
-				\item \textbf{Client}: User-developed software that submits the initial task graphs to ArmoniK and retrieves results
-				\item \textbf{Worker}: User-developed software capable of performing one or several tasks, depending on its implementation:
-				      \begin{itemize}
-					      \item Can take input data, perform calculations, and return a result
-					      \item Can submit new tasks and set the result as output of a new task
-				      \end{itemize}
-				\item \textbf{Synchronization via Data}: The client might not be aware that the task graph has been modified
-			\end{itemize}
-		\end{column}
-		\begin{column}{0.5\textwidth}
-			\centering
-			\includegraphics[width=0.95\textwidth]{mermaid-client-worker.png}
-		\end{column}
-	\end{columns}
+	\frametitle{ArmoniK SDKs}
+	\begin{itemize}
+		\item \textbf{Interoperable SDK:} Compatibility across SDKs and languages respecting a convention
+		      \begin{itemize}
+			      \item \textbf{Ease the development} of Clients and Workers.
+			      \item Provide \textbf{pre-built Worker containers}.
+			      \item Provide \textbf{high-level API} to implement Workers.
+			      \item Provide \textbf{similar clients} to define graphs and submit tasks to ArmoniK's control plane.
+			      \item Provide \textbf{conventions and best practices} for error handling, idempotency, and observability.
+			      \item Ensure \textbf{compatibility and maintainability} across different ArmoniK versions.
+		      \end{itemize}
+		\item \textbf{Python SDK (Pymonik):} User-friendly API for data science and machine learning workloads; in early access
+	\end{itemize}
+	\begin{block}{Recently added}
+		\begin{itemize}
+			\item \textbf{Official Support:} C++ and Java SDKs are now officially supported
+			\item \textbf{Redesigned C\# SDK:} Blob abstraction for data lifecycle, explicit task-graph definition, and modern async worker model
+			\item \textbf{C++ SDK Parallelism:} Upload, download, and wait operations are batched and parallelised via a thread pool, reducing blocking time and network latency
+		\end{itemize}
+	\end{block}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Dynamic Graph}
-	\begin{block}{Definition}
+	\frametitle{How to write an ArmoniK application in Python?}
+	\begin{block}{Definition: Task-based Programming Model}
+		Paradigm focusing on the decomposition of complex operations into smaller tasks
+	\end{block}
+	\begin{itemize}
+		\item Expression of complex data-driven dependencies
+		\item ArmoniK's \textbf{distributed scheduler} responsible for:
+		      \begin{itemize}
+			      \item Task distribution and load balancing
+			      \item Dependency resolution
+			      \item Tasks execution
+			      \item Data management (overlapping, prefetching, pipelining)
+		      \end{itemize}
+	\end{itemize}
+	\footnotesize
+	\inputminted{python}{task-based-programming.py}
+\end{frame}
+
+% \begin{frame}
+% 	\frametitle{The Client-Worker Pattern}
+% 	\begin{columns}[T]
+% 		\begin{column}{0.5\textwidth}
+% 			\begin{itemize}
+% 				\item \textbf{Client}: User-developed software that submits the initial task graphs to ArmoniK and retrieves results
+% 				\item \textbf{Worker}: User-developed software capable of performing one or several tasks, depending on its implementation:
+% 				      \begin{itemize}
+% 					      \item Can take input data, perform calculations, and return a result
+% 					      \item Can submit new tasks and set the result as output of a new task
+% 				      \end{itemize}
+% 				\item \textbf{Synchronization via Data}: The client might not be aware that the task graph has been modified
+% 			\end{itemize}
+% 		\end{column}
+% 		\begin{column}{0.5\textwidth}
+% 			\centering
+% 			\includegraphics[width=0.95\textwidth]{mermaid-client-worker.png}
+% 		\end{column}
+% 	\end{columns}
+% \end{frame}
+
+\begin{frame}
+	\frametitle{How to write a dynamic graph in ArmoniK in Python?}
+	\begin{block}{Definition: Dynamic Task Graph}
 		Dependency graph is not fully known when scheduling starts.
 	\end{block}
 	\begin{itemize}
@@ -126,63 +154,6 @@
 	\inputminted{python}{subtasking.py}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Dynamic Graph Example}
-	\begin{columns}[T]
-		\begin{column}{0.3\textwidth}
-			\centering
-			\vspace{1cm}
-			\vfill
-			\includegraphics[width=0.95\textwidth]{mermaid-dynamic-part1.png}
-		\end{column}
-		\begin{column}{0.05\textwidth}
-			\centering
-			\vspace{1.7cm}
-			\vfill
-			$\Rightarrow$
-		\end{column}
-		\begin{column}{0.65\textwidth}
-			\centering
-			\footnotesize
-			\includegraphics[width=0.95\textwidth]{mermaid-dynamic-part2.png}
-		\end{column}
-	\end{columns}
-\end{frame}
-
-
-\begin{frame}{Production Ready}
-	\begin{itemize}
-		\item \textbf{Security:} mTLS, encryption at rest and in transit
-		\item \textbf{High Availability:} No single point of failure, automated service restart and failover
-		\item \textbf{Multi-tenancy:} Partition-based isolation with resource quotas
-		\item \textbf{Idempotency:} Well-defined task state machine, safe under retries and failures
-	\end{itemize}
-	\begin{block}{Improving}
-		{\footnotesize Fine-grained user management and RBAC, Multi-region disaster recovery, strict plane separation, rate limiting}
-	\end{block}
-\end{frame}
-
-\begin{frame}{Fault Tolerant}
-	\begin{itemize}
-		\item \textbf{Automatic Recovery:} Failed tasks are retried or rescheduled transparently
-		\item \textbf{Idempotent Operations:} Safe retries with consistent outcomes guaranteed by the task state machine
-		\item \textbf{Failure Isolation:} Failures contained to partitions and workers without cascading
-		\item \textbf{Graceful Degradation:} ArmoniK services restart without impacting in-flight tasks
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Easy to Use \& Deploy}
-	\begin{itemize}
-		\item \textbf{Multi-language SDKs:} .NET, Python (Pymonik), and gRPC for any language
-		\item \textbf{Local Development:} Run and debug tasks locally before deploying to the cluster
-		\item \textbf{Declarative Deployment:} Helm charts and Terraform modules for reproducible provisioning
-		\item \textbf{Multi-cloud Support:} Reference deployments for AWS, and GCP
-	\end{itemize}
-	\begin{block}{Improving}
-		{\footnotesize Automated partition provisioning operator, Bare metal deployment without Kubernetes, Supercomputer / SLURM support, Azure deployment}
-	\end{block}
-\end{frame}
-
 \begin{frame}{Observable}
 	\begin{itemize}
 		\item \textbf{Metrics:} Prometheus metrics for tasks statuses, execution, and system health
@@ -190,33 +161,107 @@
 		\item \textbf{Structured Logs:} Centralized log aggregation via Cloud managed services or self-hosted solutions, logs redirection with fluentbit
 		\item \textbf{Admin GUI:} Web interface to inspect sessions, tasks, and results in real time
 	\end{itemize}
-	\begin{block}{Improving}
-		{\footnotesize Functional observability: task graph visualization, critical path analysis, anomaly detection, metrics available for tasks and cluster load balancing, OpenTelemetry-based tracing across components}
-	\end{block}
 \end{frame}
 
-\begin{frame}{Malleable}
+% \begin{frame}
+% 	\frametitle{Dynamic Graph Example}
+% 	\begin{columns}[T]
+% 		\begin{column}{0.3\textwidth}
+% 			\centering
+% 			\vspace{1cm}
+% 			\vfill
+% 			\includegraphics[width=0.95\textwidth]{mermaid-dynamic-part1.png}
+% 		\end{column}
+% 		\begin{column}{0.05\textwidth}
+% 			\centering
+% 			\vspace{1.7cm}
+% 			\vfill
+% 			$\Rightarrow$
+% 		\end{column}
+% 		\begin{column}{0.65\textwidth}
+% 			\centering
+% 			\footnotesize
+% 			\includegraphics[width=0.95\textwidth]{mermaid-dynamic-part2.png}
+% 		\end{column}
+% 	\end{columns}
+% \end{frame}
+
+
+% \begin{frame}{Production Ready}
+% 	\begin{itemize}
+% 		\item \textbf{Security:} mTLS, encryption at rest and in transit
+% 		\item \textbf{High Availability:} No single point of failure, automated service restart and failover
+% 		\item \textbf{Multi-tenancy:} Partition-based isolation with resource quotas
+% 		\item \textbf{Idempotency:} Well-defined task state machine, safe under retries and failures
+% 	\end{itemize}
+% 	\begin{block}{Improving}
+% 		{\footnotesize Fine-grained user management and RBAC, Multi-region disaster recovery, strict plane separation, rate limiting}
+% 	\end{block}
+% \end{frame}
+
+\begin{frame}{Fault Tolerant}
 	\begin{itemize}
-		\item \textbf{Elastic Compute:} Workers scale horizontally via Kubernetes HPA and KEDA depending on task queue length
-		\item \textbf{Partition-Based Isolation:} Independent scaling per POD configuration and workload type
-		\item \textbf{Health-Based Routing:} Unhealthy clusters removed from routing automatically
-		\item \textbf{Spot-Friendly:} Tolerates node preemption without throughput degradation
+		\item \textbf{Automatic Recovery:} Failed tasks are retried or rescheduled transparently
+		\item \textbf{Idempotent Operations:} Safe retries with consistent outcomes guaranteed by the task state machine
+		\item \textbf{Failure Isolation:} Failures contained to partitions and workers without cascading
+		\item \textbf{Graceful Degradation:} ArmoniK services restart without impacting in-flight tasks
+		\item \textbf{Grace Delays:} Configurable grace periods allow tasks to complete gracefully even during failures, maximizing successful task completion
 	\end{itemize}
-	\begin{block}{Improving}
-		{\footnotesize Kubernetes-native autoscaling operator with Prometheus-driven policies \quad Metrics-based multi-region routing}
-	\end{block}
 \end{frame}
 
 \begin{frame}{Portable}
 	\begin{itemize}
-		\item \textbf{Multi-Cloud:} Reference deployments on AWS, and Google Cloud Platform
-		\item \textbf{On-Premises:} Full deployment on customer-managed Kubernetes clusters
-		\item \textbf{Infrastructure-Agnostic Backends:} Pluggable adapters for storage, queues, and databases
-		\item \textbf{Open Standards:} gRPC APIs, OpenTelemetry, Helm, Terraform
+		\item \textbf{Flexible Deployment:} ArmoniK is designed to be deployed anywhere with different backend technologies. Clients have different needs and workloads are increasingly multi-site (cloud, on-prem, edge). ArmoniK adapts to these diverse environments.
+		\item \textbf{Production:} Optimized for high availability, fault tolerance, and scalability
+		      \begin{itemize}
+			      \item \textbf{Local Development:} Run and debug tasks locally before deploying to the cluster
+			      \item \textbf{Vanilla Kubernetes:} Run on any Kubernetes cluster
+			      \item \textbf{Multi-cloud Support:} Reference deployments for AWS, and GCP
+		      \end{itemize}
+		\item \textbf{POCs:}
+		      \begin{itemize}
+			      \item \textbf{Bare-metal Windows:} Run with workers running on Windows Server, orchestrator on Linux
+			      \item \textbf{Slurm-based Supercomputer:} Run on high-performance computing clusters managed by Slurm
+		      \end{itemize}
 	\end{itemize}
-	\begin{block}{Improving}
-		{\footnotesize Bare metal deployment without Kubernetes \quad Supercomputer / SLURM cluster deployment}
+\end{frame}
+
+\begin{frame}{Cluster Federation}
+	\begin{itemize}
+		\item \textbf{Multi-cluster Support:} ArmoniK can span multiple Kubernetes clusters, enabling workload distribution across regions and cloud providers
+		\item \textbf{Intelligent Load Balancer:} Distributes ArmoniK sessions across clusters based on current load and availability
+		      \begin{itemize}
+			      \item Current implementation: Basic load balancing by round robin DNS with health checks and partitions availability
+			      \item Future: Metric-aware scheduling for optimized resource utilization
+		      \end{itemize}
+		\item \textbf{Global Scheduler:} Centralized scheduling decisions based on global cluster state and policies
+	\end{itemize}
+	\vspace{0.5cm}
+	\begin{block}{In Progress}
+		Currently in development — production deployment coming soon
 	\end{block}
+\end{frame}
+
+\begin{frame}{Easy to Use \& Deploy}
+	We provide tools and scripts to simplify the deployment and usage of ArmoniK, but we also designed the platform to be as user-friendly as possible for developers and operators.
+	\begin{itemize}
+		\item \textbf{Local Development:} K3s installation on WSL2 with Kubernetes based deployment for easy testing and debugging
+		\item \textbf{Vanilla Kubernetes:} Run on any Kubernetes cluster
+		\item \textbf{Multi-cloud Support:} Reference deployments for AWS, and GCP
+		\item \textbf{Bare-metal Windows:} Run with workers running on Windows Server, orchestrator on Linux
+		\item \textbf{Slurm-based Supercomputer:} Run on high-performance computing clusters managed by Slurm
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Malleable}
+	ArmoniK scales differently depending on the deployment environment and workload characteristics:
+	\begin{itemize}
+		\item \textbf{Local Development:} Limited to single-node execution with K3s on WSL2, but supports the same APIs and task graph features as the full cluster deployment
+		\item \textbf{Vanilla Kubernetes:} Scales horizontally by adding more worker nodes; stateless orchestrator components can be replicated for high availability
+		\item \textbf{Multi-cloud Support:} Scales dynamically with the computing needs; Pay-as-you-go model on cloud providers allows for cost-effective scaling
+		\item \textbf{Bare-metal Windows:} Static worker deployment with manual scaling
+		\item \textbf{Slurm-based Supercomputer:} Static worker deployment with static deployment based on Slurm job submissions
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Performant}
@@ -225,19 +270,36 @@
 			\begin{itemize}
 				\item \textbf{High Throughput:} \textit{4500 tasks/sec sustained throughput on 2000 workers}
 				\item \textbf{Low Latency:} \textit{20 ms scheduling overhead}
-				\item \textbf{High Concurrency:} Validated at \textit{16 000} concurrent workers
+				\item \textbf{High Concurrency:} Validated at $>$\textit{15,000} concurrent workers
+				      \note{Les meilleurs sont dans la salle ; ils vous en parleront peut-être cet après-midi.}
+				\item \textbf{Autoscaling:} Minimize idle capacity under variable workloads, can use custom metrics for scaling decisions
+				\item \textbf{Pod deletion cost:} Configure a cost for worker pods to delay their eviction during autoscaling, allowing them to finish in-flight tasks and reducing task failures during scale-down events
 			\end{itemize}
 		\end{column}
 		\begin{column}{0.5\textwidth}
 			\begin{itemize}
 				\item \textbf{Efficient Data Transfers:} Parallel prefetching and pipelining
+				\item \textbf{Configurable Streaming Chunks:} Server-defined chunk size reduces gRPC overhead for large payloads
+				\item \textbf{Local Filesystem Cache:} Node-local LRU cache eliminates redundant Object Storage round-trips for reused data
 				\item \textbf{Decoupled Architecture:} Stateless components enable independent horizontal scaling
-				\item \textbf{Autoscaling:} Minimize idle capacity under variable workloads
 			\end{itemize}
 		\end{column}
 	\end{columns}
-	\begin{block}{Improving}
-		{\footnotesize Control Plane horizontal scalability \quad Batched persistence and task prefetching}
+	% chiffres qui ne sont pas de la dernière version, à mettre à jour
+\end{frame}
+
+\begin{frame}{Security \& Compliance}
+	\begin{itemize}
+		\item \textbf{SBOM:} Software Bill of Materials for all orchestration components to track dependencies and vulnerabilities
+		\item \textbf{CVE Scanning:} Vulnerability scanning of orchestration container images and dependencies
+		\item \textbf{Azure Distroless Images:} Distroless images for orchestration components to minimize attack surface
+		\item \textbf{mTLS:} Mutual TLS for all inter-service communication
+		\item \textbf{Encryption:} Data encrypted at rest and in transit
+		\item \textbf{Auditability:} Structured logs, traceability
+	\end{itemize}
+
+	\begin{block}{In Progress}
+		SBM, CVE scanning and distoless images will be integrateed in the other components
 	\end{block}
 \end{frame}
 
@@ -251,41 +313,30 @@
 	\end{itemize}
 \end{frame}
 
-\subsection{The latest release brings significant improvements in performance, scalability, and user experience.}
 
 \begin{frame}{ArmoniK v2.23.0 — New LTS Release}
 	\begin{columns}[T]
-		\begin{column}{0.33\textwidth}
-			\begin{block}{Performance}
-				\begin{itemize}
-					\item Filesystem LRU cache for task data
-					\item Streaming chunks: 84\,KB\,$\to$\,2\,MB
-					\item C++ parallel I/O via thread pool
-					\item .NET\,10 runtime upgrade
-				\end{itemize}
-			\end{block}
-		\end{column}
-		\begin{column}{0.33\textwidth}
-			\begin{exampleblock}{Developer Experience}
-				\begin{itemize}
-					\item Redesigned C\# SDK
-					\item Official C\#, C++, Java SDKs
-					\item Declarative static initialization
-					\item Distroless container images
-				\end{itemize}
-			\end{exampleblock}
-		\end{column}
-		\begin{column}{0.33\textwidth}
-			\begin{alertblock}{Ecosystem}
-				\begin{itemize}
-					\item ArmoniK Load Balancer
-					\item NATS JetStream adapter
-					\item Percona MongoDB support
-					\item Ingress \& GUI refactoring
-				\end{itemize}
-			\end{alertblock}
-		\end{column}
+		\column{0.5\textwidth}
+		\textbf{Rolling Release}
+		\begin{itemize}
+			\item \textbf{Frequency:} Every 4-6 weeks
+			\item \textbf{Features:} All newest developments
+			\item \textbf{Patches:} CVE fixes in next release
+		\end{itemize}
+
+		\column{0.5\textwidth}
+		\textbf{Production Release (LTS)}
+		\begin{itemize}
+			\item \textbf{Frequency:} Every 6 months
+			\item \textbf{Support:} 9 months per release
+			\item \textbf{Patches:} Every 4-6 weeks
+		\end{itemize}
 	\end{columns}
+
+	\vspace{1em}
+	\begin{block}{LTS Benefits}
+		Stability, predictable upgrade cycles, long-term security support, and production readiness
+	\end{block}
 \end{frame}
 
 \begin{frame}{ArmoniK v2.23.0 — Performance Improvements}
