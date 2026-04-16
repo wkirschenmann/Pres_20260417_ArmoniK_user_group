@@ -1,12 +1,59 @@
 
 \section{ArmoniK has reached a mature state with production-ready features and a growing community.}
 
+\begin{frame}{ArmoniK Architecture}
+	\centering\vspace{0.2cm}
+	\includegraphics[width=0.88\textwidth]{mermaid-simplifed-architecture.png}
 
+	\note
+	{
+		\begin{itemize}
+			\item \textbf{Control Plane:} Handles session and task lifecycle, scheduling, and state management
+			\item \textbf{Data Plane:} Object storage for task inputs, outputs, and intermediate results
+			\item \textbf{Compute Plane:} Stateless agents and workers that execute tasks and report results back
+			\item Strict separation of planes limits blast radius and enables independent scaling
+		\end{itemize}
+	}
+\end{frame}
 
-
+\begin{frame}{Ecosystem \& Deployment}
+	\begin{columns}[T]
+		\begin{column}{0.48\textwidth}
+			{\small\bfseries\color{aneoblue}SDKs \& APIs}\\[4pt]
+			\begin{itemize}
+				\item \textbf{SDKs}: C\#, C++, Java, Python (Pymonik)
+				\item \textbf{APIs}: C\#, C++, Java, Rust, Javascript, Python
+				\item \textbf{gRPC}: any language
+			\end{itemize}
+			\vspace{0.3cm}
+			{\small\bfseries\color{aneoblue}Observability Stack}\\[4pt]
+			\begin{itemize}
+				\item Grafana dashboards, Prometheus metrics
+				\item CLEF structured logs, OpenTelemetry tracing
+				\item Admin GUI: session, task, result and partitions monitoring
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			{\small\bfseries\color{aneoblue}Deployment Infrastructure}\\[4pt]
+			\begin{itemize}
+				\item Kubernetes with Helm and Terraform
+				\item AWS, Google Cloud Platform
+				\item On-premises Kubernetes
+				\item Local development mode
+			\end{itemize}
+			\vspace{0.3cm}
+			{\small\bfseries\color{aneoblue}Backend Adapters}\\[4pt]
+			\begin{itemize}
+				\item \textbf{Object Storage}: S3, MinIO, GCS
+				\item \textbf{Queue}: SQS, PubSub, Nats, RabbitMQ, ActiveMQ Artemis
+				\item \textbf{Database}: MongoDB
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
 
 \begin{frame}
-	\frametitle{Task-based Programming in ArmoniK}
+	\frametitle{Usage : Task-based Programming in ArmoniK}
 	\begin{block}{Definition}
 		Paradigm focusing on the decomposition of complex operations into smaller tasks
 	\end{block}
@@ -103,13 +150,159 @@
 \end{frame}
 
 
+\begin{frame}{Production Ready}
+	\begin{itemize}
+		\item \textbf{Security:} mTLS, encryption at rest and in transit
+		\item \textbf{High Availability:} No single point of failure, automated service restart and failover
+		\item \textbf{Multi-tenancy:} Partition-based isolation with resource quotas
+		\item \textbf{Idempotency:} Well-defined task state machine, safe under retries and failures
+	\end{itemize}
+	\begin{block}{Improving}
+		{\footnotesize Fine-grained user management and RBAC, Multi-region disaster recovery, strict plane separation, rate limiting}
+	\end{block}
+\end{frame}
 
+\begin{frame}{Fault Tolerant}
+	\begin{itemize}
+		\item \textbf{Automatic Recovery:} Failed tasks are retried or rescheduled transparently
+		\item \textbf{Idempotent Operations:} Safe retries with consistent outcomes guaranteed by the task state machine
+		\item \textbf{Failure Isolation:} Failures contained to partitions and workers without cascading
+		\item \textbf{Graceful Degradation:} ArmoniK services restart without impacting in-flight tasks
+	\end{itemize}
+\end{frame}
 
+\begin{frame}{Easy to Use \& Deploy}
+	\begin{itemize}
+		\item \textbf{Multi-language SDKs:} .NET, Python (Pymonik), and gRPC for any language
+		\item \textbf{Local Development:} Run and debug tasks locally before deploying to the cluster
+		\item \textbf{Declarative Deployment:} Helm charts and Terraform modules for reproducible provisioning
+		\item \textbf{Multi-cloud Support:} Reference deployments for AWS, and GCP
+	\end{itemize}
+	\begin{block}{Improving}
+		{\footnotesize Automated partition provisioning operator, Bare metal deployment without Kubernetes, Supercomputer / SLURM support, Azure deployment}
+	\end{block}
+\end{frame}
 
+\begin{frame}{Observable}
+	\begin{itemize}
+		\item \textbf{Metrics:} Prometheus metrics for tasks statuses, execution, and system health
+		\item \textbf{Dashboards:} Pre-built Grafana dashboards for operational monitoring
+		\item \textbf{Structured Logs:} Centralized log aggregation via Cloud managed services or self-hosted solutions, logs redirection with fluentbit
+		\item \textbf{Admin GUI:} Web interface to inspect sessions, tasks, and results in real time
+	\end{itemize}
+	\begin{block}{Improving}
+		{\footnotesize Functional observability: task graph visualization, critical path analysis, anomaly detection, metrics available for tasks and cluster load balancing, OpenTelemetry-based tracing across components}
+	\end{block}
+\end{frame}
 
+\begin{frame}{Malleable}
+	\begin{itemize}
+		\item \textbf{Elastic Compute:} Workers scale horizontally via Kubernetes HPA and KEDA depending on task queue length
+		\item \textbf{Partition-Based Isolation:} Independent scaling per POD configuration and workload type
+		\item \textbf{Health-Based Routing:} Unhealthy clusters removed from routing automatically
+		\item \textbf{Spot-Friendly:} Tolerates node preemption without throughput degradation
+	\end{itemize}
+	\begin{block}{Improving}
+		{\footnotesize Kubernetes-native autoscaling operator with Prometheus-driven policies \quad Metrics-based multi-region routing}
+	\end{block}
+\end{frame}
 
+\begin{frame}{Portable}
+	\begin{itemize}
+		\item \textbf{Multi-Cloud:} Reference deployments on AWS, and Google Cloud Platform
+		\item \textbf{On-Premises:} Full deployment on customer-managed Kubernetes clusters
+		\item \textbf{Infrastructure-Agnostic Backends:} Pluggable adapters for storage, queues, and databases
+		\item \textbf{Open Standards:} gRPC APIs, OpenTelemetry, Helm, Terraform
+	\end{itemize}
+	\begin{block}{Improving}
+		{\footnotesize Bare metal deployment without Kubernetes \quad Supercomputer / SLURM cluster deployment}
+	\end{block}
+\end{frame}
 
+\begin{frame}{Performant}
+	\begin{columns}[T]
+		\begin{column}{0.5\textwidth}
+			\begin{itemize}
+				\item \textbf{High Throughput:} \textit{4500 tasks/sec sustained throughput on 2000 workers}
+				\item \textbf{Low Latency:} \textit{20 ms scheduling overhead}
+				\item \textbf{High Concurrency:} Validated at \textit{16 000} concurrent workers
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{itemize}
+				\item \textbf{Efficient Data Transfers:} Parallel prefetching and pipelining
+				\item \textbf{Decoupled Architecture:} Stateless components enable independent horizontal scaling
+				\item \textbf{Autoscaling:} Minimize idle capacity under variable workloads
+			\end{itemize}
+		\end{column}
+	\end{columns}
+	\begin{block}{Improving}
+		{\footnotesize Control Plane horizontal scalability \quad Batched persistence and task prefetching}
+	\end{block}
+\end{frame}
 
-
+\begin{frame}{Open Source}
+	\begin{itemize}
+		\item \textbf{GitHub:} All components publicly available at \texttt{github.com/aneoconsulting}
+		\item \textbf{License:} Apache 2.0 — use, modify, and distribute freely
+		\item \textbf{Community:} Active user group, public issue tracker, regular releases
+		\item \textbf{Extensibility:} Plugin interfaces for storage, queue, and compute adapters
+		\item \textbf{Transparency:} Full platform visibility, no black-box components
+	\end{itemize}
+\end{frame}
 
 \subsection{The latest release brings significant improvements in performance, scalability, and user experience.}
+
+\begin{frame}{ArmoniK v2.23.0 — New LTS Release}
+	\begin{columns}[T]
+		\begin{column}{0.33\textwidth}
+			\begin{block}{Performance}
+				\begin{itemize}
+					\item Filesystem LRU cache for task data
+					\item Streaming chunks: 84\,KB\,$\to$\,2\,MB
+					\item C++ parallel I/O via thread pool
+					\item .NET\,10 runtime upgrade
+				\end{itemize}
+			\end{block}
+		\end{column}
+		\begin{column}{0.33\textwidth}
+			\begin{exampleblock}{Developer Experience}
+				\begin{itemize}
+					\item Redesigned C\# SDK
+					\item Official C\#, C++, Java SDKs
+					\item Declarative static initialization
+					\item Distroless container images
+				\end{itemize}
+			\end{exampleblock}
+		\end{column}
+		\begin{column}{0.33\textwidth}
+			\begin{alertblock}{Ecosystem}
+				\begin{itemize}
+					\item ArmoniK Load Balancer
+					\item NATS JetStream adapter
+					\item Percona MongoDB support
+					\item Ingress \& GUI refactoring
+				\end{itemize}
+			\end{alertblock}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{ArmoniK v2.23.0 — Performance Improvements}
+	\begin{itemize}
+		\item \textbf{Filesystem Cache:} Node-local LRU cache stores task inputs and outputs, eliminating redundant Object Storage round-trips when data is reused on the same node; configurable eviction threshold
+		\item \textbf{Configurable Streaming Chunks:} Fixed 84\,KB replaced by a server-defined 2\,MB default — fewer gRPC messages for large payloads, lower CPU overhead, dynamically propagated to clients and agents
+		\item \textbf{C++ SDK Parallelism:} Upload, download, and wait operations are batched and parallelised via a thread pool, reducing blocking time and network latency
+		\item \textbf{.NET\,10 Upgrade:} All orchestrator images move from .NET\,8 to .NET\,10 LTS — improved throughput, reduced memory footprint, no impact on clients/workers running older runtimes
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{ArmoniK v2.23.0 — Developer Experience \& Ecosystem}
+	\begin{itemize}
+		\item \textbf{Redesigned C\# SDK:} Blob abstraction for data lifecycle, explicit task-graph definition, and modern async worker model; C\#, C++, and Java SDKs are now officially supported
+		\item \textbf{Declarative Initialization:} Partitions, roles, and authentication configured via structured environment variables applied idempotently at startup — no manual database intervention required
+		\item \textbf{ArmoniK Load Balancer:} Native Kubernetes deployment with TLS/mTLS, ingress, and GUI integration — officially part of reference deployments
+		\item \textbf{NATS JetStream Adapter:} New queue adapter for NATS with durable JetStream persistence
+		\item \textbf{Distroless Images:} All orchestrator images switch to distroless base, reducing CVE exposure and image size
+	\end{itemize}
+\end{frame}
