@@ -8,6 +8,7 @@
 *.pdf
 *.toc
 *.bak*
+*.vrb
 cache
 *.synctex.gz
 build
