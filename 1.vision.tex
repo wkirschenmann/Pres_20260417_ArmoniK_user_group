@@ -1,111 +1,581 @@
 % vision ?
-\section{ArmoniK ambitions are to provide a high-performance computing platform for the most demanding applications.}
+\section{Our Ambition: Provide the High-Performance Computing Platform for the Most Demanding Applications.}
 
+%% ── NEW: Introduction frames (5 frames) ──
 
-\begin{frame}{What is ArmoniK?}
-	\begin{alertblock}{ArmoniK}
-		A task orchestrator.
+% Frame 1: FSI World
+\begin{frame}{The FSI World}
+	\begin{columns}[T]
+		\begin{column}{0.42\textwidth}
+			\centering\vspace{0.3cm}
+			\begin{tikzpicture}[
+					box/.style={rectangle, rounded corners=4pt, font=\footnotesize\bfseries,
+							minimum width=3.6cm, minimum height=0.7cm, align=center, text=white},
+					arr/.style={-Stealth, thick, aneoorange!80}
+				]
+				\node[box, fill=aneoblue] (ep) at (0, 0)
+					{Embarrassingly\\Parallel\\(Monte Carlo)};
+				\draw[arr] (ep.south) -- ++(0,-0.4);
+				\node[box, fill=aneoorange] (cx) at (0, -1.8)
+					{Complex Nested\\Algorithms\\(XVA, AAD)};
+				\draw[arr] (cx.south) -- ++(0,-0.4);
+				\node[box, fill=aneoorange!20, draw=aneoorange!60, text=aneoblack,
+						font=\tiny, minimum height=1.0cm] (lp) at (0, -3.5)
+					{Lost Properties\\Fault tolerance\\Malleability\\Cloud portability};
+			\end{tikzpicture}
+		\end{column}
+		\begin{column}{0.58\textwidth}
+			\vspace{0.5cm}
+			\begin{itemize}
+				\item \textbf{HTC schedulers} powered embarrassingly parallel Monte Carlo in production
+				\item \textbf{XVA/CVA \& AAD} introduced portfolio-level aggregation and backward graph traversal
+				\item \textbf{Complex setups} emerged to integrate algorithm complexity within orchestration
+				\item \textbf{Fault tolerance, malleability, cloud portability} — originally free with HTC — became harder to maintain
+			\end{itemize}
+		\end{column}
+	\end{columns}
+
+	\note{
+		\begin{itemize}
+			\item The FSI world started simple: Monte Carlo simulations are embarrassingly
+			      parallel — you throw thousands of independent paths at an HTC scheduler
+			      and collect results. Fault tolerance and malleability came for free because
+			      every task was independent.
+			\item Then quant algorithms got more sophisticated. XVA and CVA adjustments
+			      require portfolio-level aggregation across counterparties. Adjoint
+			      Algorithmic Differentiation computes Greeks by traversing the computation
+			      graph backward. These aren't embarrassingly parallel anymore — they have
+			      deep, nested dependencies.
+			\item Some teams built incredibly complex setups — custom orchestration layers
+			      bolted onto HTC schedulers — to handle this new complexity. But the
+			      properties they used to get for free (fault tolerance, malleability,
+			      easy cloud migration) started slipping away. That's the tension this
+			      world was living with.
+		\end{itemize}
+	}
+\end{frame}
+
+%% ── END: Frame 1 ──
+
+% Frame 2: HPC World
+\begin{frame}{The HPC World}
+	\begin{columns}[T]
+		\begin{column}{0.52\textwidth}
+			\vspace{0.5cm}
+			\begin{itemize}
+				\item \textbf{Supercomputer workloads} with complex node-to-node communication patterns
+				\item \textbf{MPI} enables performance but is complex and hard to reason about correctly
+				\item \textbf{Fault tolerance \& malleability} are difficult to achieve with MPI's rigid model
+				\item \textbf{Hardware adaptation} (changing node counts at launch) is often painful
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\centering\vspace{0.3cm}
+			\begin{tikzpicture}[
+					mpibox/.style={rectangle, rounded corners=4pt, fill=aneoblue!15,
+							draw=aneoblue!40, text=aneoblack, font=\footnotesize\bfseries,
+							minimum width=2.2cm, minimum height=1.8cm, align=center},
+					taskbox/.style={rectangle, rounded corners=4pt, fill=aneoturquoise!20,
+							draw=aneoturquoise!50, text=aneoblack, font=\footnotesize\bfseries,
+							minimum width=3.0cm, minimum height=1.8cm, align=center},
+					arr/.style={-Stealth, thick, aneoorange, dashed}
+				]
+				\node[mpibox] (mpi) at (0, 0) {MPI\\Rigid\\Model};
+				\node[taskbox] (tbr) at (4.2, 0) {Task-Based\\Runtimes\\[4pt]
+					{\tiny StarPU, PaRSEC}\\[-1pt]
+					{\tiny Legion, OmpSs}\\[-1pt]
+					{\tiny Charm++}};
+				\draw[arr] (mpi.east) -- (tbr.west)
+					node[midway, above, font=\tiny\itshape, text=aneoorange] {manytask}
+					node[midway, below, font=\tiny\itshape, text=aneoorange] {computing};
+			\end{tikzpicture}
+		\end{column}
+	\end{columns}
+
+	\note{
+		\begin{itemize}
+			\item In the traditional HPC world, algorithms are designed for supercomputers
+			      with tightly coupled nodes communicating via MPI. These workloads lack
+			      the data parallelism that makes embarrassingly parallel approaches work.
+			\item MPI is powerful but unforgiving. Getting the communication patterns right
+			      is hard, debugging is harder, and if a single node fails, the entire
+			      computation typically has to restart. Malleability — dynamically adjusting
+			      the number of nodes at runtime — is essentially impossible with standard
+			      MPI.
+			\item The HPC community recognized these limitations and started building
+			      task-based runtimes: StarPU, PaRSEC, Legion, OmpSs, Charm++. These
+			      frameworks decompose computations into tasks with explicit dependencies,
+			      letting the runtime handle scheduling, fault recovery, and hardware
+			      adaptation. This is the HPC world's own path toward the same abstraction
+			      we'll see from the other two worlds.
+		\end{itemize}
+	}
+\end{frame}
+
+%% ── END: Frame 2 ──
+
+% Frame 3: Cloud Computing World
+\begin{frame}{The Cloud Computing World}
+	\begin{columns}[T]
+		\begin{column}{0.45\textwidth}
+			\centering\vspace{0.3cm}
+			\begin{tikzpicture}
+				\node[rectangle, rounded corners=5pt, fill=aneoturquoise!15,
+					draw=aneoturquoise!40, text=aneoblack, text width=4.0cm,
+					align=left, inner sep=8pt, minimum height=2.8cm] (promise) at (0,0) {%
+					{\footnotesize\bfseries\color{aneoturquoise!80!black}Compelling Model}\\[4pt]
+					{\small\color{aneoblack}%
+					\begin{itemize}\setlength{\itemsep}{1pt}
+						\item[\textbullet] Elasticity
+						\item[\textbullet] Virtually unlimited resources
+						\item[\textbullet] Pay-per-use pricing
+						\item[\textbullet] Spot/preemptible instances
+					\end{itemize}}%
+				};
+			\end{tikzpicture}
+		\end{column}
+		\begin{column}{0.55\textwidth}
+			\centering\vspace{0.3cm}
+			\begin{tikzpicture}
+				\node[rectangle, rounded corners=5pt, fill=aneoorange!15,
+					draw=aneoorange!40, text=aneoblack, text width=4.6cm,
+					align=left, inner sep=8pt, minimum height=2.8cm] (complex) at (0,0) {%
+					{\footnotesize\bfseries\color{aneoorange!80!black}New Complexities}\\[4pt]
+					{\small\color{aneoblack}%
+					\begin{itemize}\setlength{\itemsep}{1pt}
+						\item[\textbullet] Malleability \& fault tolerance
+						\item[\textbullet] Data movement \& lifecycle
+						\item[\textbullet] Multi-tenancy \& security
+						\item[\textbullet] Latency, portability \& cost
+					\end{itemize}}%
+				};
+			\end{tikzpicture}
+		\end{column}
+	\end{columns}
+
+	\vspace{0.2cm}
+	\centering{\small\itshape\color{aneoblack!60}
+		These complexities demand a higher-level execution abstraction.}
+
+	\note{
+		\begin{itemize}
+			\item I started the HPC cloud adventure back in 2012, building a first
+			      Azure-focused scheduling layer. The cloud promise was — and still is —
+			      incredibly compelling: elastic resources, pay only for what you use,
+			      and spot instances that can slash costs by 60-90\%.
+			\item But leveraging that model properly opened a Pandora's box. Your code
+			      needs to handle changing resource counts at runtime — that's malleability.
+			      Spot instances can be reclaimed at any moment — that's fault tolerance.
+			      Data is no longer on a shared filesystem — you need to manage data
+			      movements, replication, and cleanup across distributed storage.
+			\item There's also multi-tenancy, network latency compared to on-prem
+			      interconnects, hardware portability across CPU/GPU/ARM, and cost
+			      optimization. And here's one that security teams care deeply about:
+			      legacy schedulers typically require inbound connections from the cloud
+			      to on-premises networks. Enterprise security teams reject that outright.
+			      ArmoniK was specifically designed with outbound-only connections from
+			      on-prem to cloud, eliminating that blocker.
+			\item The key insight is that all these complexities shouldn't be the
+			      application developer's problem. They need a higher-level abstraction
+			      that handles this for them.
+		\end{itemize}
+	}
+\end{frame}
+
+%% ── END: Frame 3 ──
+
+% Frame 4: Convergence
+\begin{frame}{Three Worlds, One Abstraction}
+	\centering\vspace{0.1cm}
+	\begin{tikzpicture}[
+			src/.style={rectangle, rounded corners=5pt, minimum width=3.8cm,
+					text width=3.4cm, minimum height=1.0cm, font=\small\bfseries, align=center},
+			arr/.style={-Stealth, thick}
+		]
+		% Source nodes (left) — examples included in each node
+		\node[src, fill=aneoblue!15, draw=aneoblue!40, text=aneoblue]
+			(fsi) at (0, 1.4) {FSI World\\[1pt]{\tiny\color{aneoblack!70}Dask, Symphony, DataSynapse}};
+		\node[src, fill=aneoturquoise!15, draw=aneoturquoise!40, text=aneoturquoise!80!black]
+			(hpc) at (0, 0) {HPC World\\[1pt]{\tiny\color{aneoblack!70}StarPU, PaRSEC, Legion, Charm++}};
+		\node[src, fill=aneoorange!15, draw=aneoorange!40, text=aneoorange!80!black]
+			(cloud) at (0, -1.4) {Cloud World\\[1pt]{\tiny\color{aneoblack!70}Airflow, Step Functions, Ray, Dask}};
+
+		% Central node (right) — same width, tall enough to span all three source nodes
+		\node[src, rounded corners=6pt, fill=aneoblue, text=white,
+			font=\normalsize\bfseries, minimum height=3.8cm] (dag) at (5.5, 0)
+			{DAG of Tasks\\[2pt]{\tiny Decouple algorithm from execution}};
+
+		% Convergence arrows — each hits the DAG box edge at source height
+		\draw[arr, aneoblue!70]       (fsi.east)   -- (dag.west |- fsi);
+		\draw[arr, aneoturquoise!70]  (hpc.east)   -- (dag.west);
+		\draw[arr, aneoorange!70]     (cloud.east) -- (dag.west |- cloud);
+
+	\end{tikzpicture}
+
+	\note{
+		\begin{itemize}
+			\item Here's the punchline: all three worlds — independently, without
+			      coordinating — arrived at the same fundamental abstraction. Directed
+			      acyclic graphs of tasks.
+			\item In FSI, tools like Dask and proprietary platforms like Symphony and
+			      DataSynapse moved toward expressing computations as task graphs. In
+			      HPC, StarPU, PaRSEC, Legion, and Charm++ all decompose algorithms
+			      into tasks with explicit data dependencies. In cloud, Airflow, AWS
+			      Step Functions, and Ray all orchestrate DAGs of work.
+			\item Why DAGs? Because they decouple the algorithm's structure from how
+			      and where it executes. Once you have a DAG, the runtime can handle
+			      fault tolerance (re-run failed nodes), malleability (schedule across
+			      changing resources), and portability (run the same graph on-prem or
+			      in the cloud).
+			\item ArmoniK's insight was to go further. Instead of a plain DAG of tasks,
+			      ArmoniK uses a bipartite DAG — with both task nodes and data nodes as
+			      first-class citizens. This means data isn't just an implicit side
+			      effect of task execution; it's an explicit node in the graph. That
+			      enables data-aware scheduling, explicit data lifecycle management,
+			      and computation-communication overlapping. We'll see this in detail
+			      shortly.
+		\end{itemize}
+	}
+\end{frame}
+
+%% ── END: Frame 4 ──
+
+% Frames 4a–4b: Dynamic Graphs (single frame, two overlays)
+\begin{frame}<1-2>{Dynamic Graphs can Fully Describe Complex Algorithms}
+	\centering\vspace{0.1cm}
+	\begin{tikzpicture}[
+			% ── shared styles ──
+			data/.style={rectangle, rounded corners=3pt, fill=aneoblue!18,
+				draw=aneoblue!50, text=aneoblack, font=\footnotesize\bfseries,
+				minimum width=1.5cm, minimum height=0.55cm, align=center},
+			task/.style={rectangle, rounded corners=10pt, fill=aneoorange!25,
+				draw=aneoorange!60, text=aneoblack, font=\footnotesize\bfseries,
+				minimum width=1.5cm, minimum height=0.55cm, align=center},
+			result/.style={rectangle, rounded corners=3pt, fill=aneoblue!30,
+				draw=aneoblue!60, text=aneoblack, font=\footnotesize\bfseries,
+				minimum width=1.5cm, minimum height=0.55cm, align=center},
+			smalldata/.style={rectangle, rounded corners=2pt, fill=aneoblue!18,
+				draw=aneoblue!50, text=aneoblack, font=\tiny\bfseries,
+				minimum width=1.1cm, minimum height=0.45cm, align=center},
+			smalltask/.style={rectangle, rounded corners=8pt, fill=aneoorange!25,
+				draw=aneoorange!60, text=aneoblack, font=\tiny\bfseries,
+				minimum width=1.1cm, minimum height=0.45cm, align=center},
+			smallresult/.style={rectangle, rounded corners=2pt, fill=aneoblue!30,
+				draw=aneoblue!60, text=aneoblack, font=\tiny\bfseries,
+				minimum width=1.3cm, minimum height=0.55cm, align=center},
+			arr/.style={-Stealth, thick, aneoblue!70},
+			sarr/.style={-Stealth, thin, aneoorange!70},
+			userarr/.style={-Stealth, thick, aneoblue},
+			lab/.style={font=\tiny\itshape, text=aneoblack!70, align=left}
+		]
+		% Fix bounding box first (invisible)
+		\useasboundingbox (-5.8, -4.0) rectangle (9.8, 3.2);
+
+		% ════════════════════════════════════════════
+		%  Shared elements (both overlays)
+		% ════════════════════════════════════════════
+
+		% Data nodes + background box
+		\node[data] (d1) at (0.0, 2.2) {Data 1};
+		\node[data] (d2) at (1.8, 2.2) {Data 2};
+
+		% Solve task
+		\node[task] (solve) at (0.9, 0.9) {Solve};
+
+		% Result
+		\node[result] (res) at (0.9, -3.3) {Result};
+
+		% Data → Solve arrows
+		\draw[arr] (d1.south) -- (solve.north);
+		\draw[arr] (d2.south) -- (solve.north);
+
+		% ── Developer icon (stick figure, no circle head, no code symbol) ──
+		% Placed far left; arrows will start from explicit coordinates to the right
+		\begin{scope}[shift={(-4.8, 0.0)}, scale=1.1]
+			% Head (filled, no separate stroke circle)
+			\fill[aneoblack!60] (0, 0.6) circle (0.18);
+			% Body
+			\draw[semithick, aneoblack!60] (0, 0.42) -- (0, -0.05);
+			% Arms
+			\draw[semithick, aneoblack!60] (-0.28, 0.2) -- (0, 0.32) -- (0.28, 0.2);
+			% Legs
+			\draw[semithick, aneoblack!60] (0, -0.05) -- (-0.2, -0.42);
+			\draw[semithick, aneoblack!60] (0, -0.05) -- (0.2, -0.42);
+		\end{scope}
+
+		% Arrow origins — to the right of the figure, so arrows don't overlap it
+		\coordinate (arrowstart) at (-4.2, 0.0);
+
+		% User interaction arrows
+		\draw[userarr] (arrowstart |- 0,0.5) -- (d1.west)
+			node[pos=0.35, above, lab] {1. User provides data};
+		\draw[userarr] (arrowstart) -- (solve.west)
+			node[pos=0.4, above, lab] {2. User submits\\the task};
+		\draw[userarr] (arrowstart |- 0,-0.5) -- (res.west)
+			node[pos=0.3, below, lab] {3. User waits for the result\\availability and downloads\\the result};
+
+		% ════════════════════════════════════════════
+		%  Overlay 1 only: simple direct arrow Solve → Result
+		% ════════════════════════════════════════════
+		\only<1>{%
+			\draw[arr] (solve.south) -- (res.north);
+		}
+
+		% ════════════════════════════════════════════
+		%  Overlay 2 only: dynamic subgraph
+		% ════════════════════════════════════════════
+		\only<2>{%
+			% Solve → Result (delegated, still present)
+			\draw[arr] (solve.south) -- (res.north);
+
+			% Subgraph background box
+			\node[draw=aneoblue!25, fill=aneoblue!8, rounded corners=6pt,
+				inner sep=0pt, minimum width=6.2cm, minimum height=5.6cm]
+				(subbox) at (6.6, -0.5) {};
+
+			% Step 4 label
+			\node[lab, text=aneoblack!80] at (3.3, 0.5)
+				{4. Solver submits\\subgraph and\\delegates result\\production};
+			\draw[userarr, aneoorange!80] (solve.east) -- (3.8, 0.5);
+
+			% ── Sub-data nodes (with stacked-copy effect) ──
+			\foreach \i/\xpos/\lbl in {3/4.6/Data 3, 4/5.8/Data 4, 5/7.0/Data 5, 6/8.2/Data 6}{
+				\node[smalldata, yshift=4pt, xshift=2pt, opacity=0.2] at (\xpos, 1.8) {};
+				\node[smalldata, yshift=2pt, xshift=1pt, opacity=0.4] at (\xpos, 1.8) {};
+				\node[smalldata] (sd\i) at (\xpos, 1.8) {\lbl};
+			}
+
+			% Data 2 → sub-data (dashed fan-out, curving above the subgraph)
+			\draw[arr, dashed] (d2.east) .. controls +(1.5,0.8) and +(-0.5,0.8) .. (sd3.north);
+			\draw[arr, dashed] (d2.east) .. controls +(2.5,1.0) and +(-0.3,0.8) .. (sd4.north);
+			\draw[arr, dashed] (d2.east) .. controls +(3.5,1.0) and +( 0.0,0.8) .. (sd5.north);
+			\draw[arr, dashed] (d2.east) .. controls +(4.5,1.0) and +( 0.3,0.8) .. (sd6.north);
+
+			% ── Sub-solve tasks (3 solvers, spaced to match data pairs) ──
+			\node[smalltask] (ss1) at (5.2, 0.4) {Solve};
+			\node[smalltask] (ss2) at (6.4, 0.4) {Solve};
+			\node[smalltask] (ss3) at (7.6, 0.4) {Solve};
+
+			% Data → Solve arrows (each solver gets 2 adjacent data nodes)
+			\draw[sarr] (sd3.south) -- (ss1.north);
+			\draw[sarr] (sd4.south) -- (ss1.north);
+			\draw[sarr] (sd4.south) -- (ss2.north);
+			\draw[sarr] (sd5.south) -- (ss2.north);
+			\draw[sarr] (sd5.south) -- (ss3.north);
+			\draw[sarr] (sd6.south) -- (ss3.north);
+
+			% ── Intermediate results ──
+			\node[smallresult] (ir1) at (5.2, -0.9) {Intermediate\\[-1pt]Result};
+			\node[smallresult] (ir2) at (6.4, -0.9) {Intermediate\\[-1pt]Result};
+			\node[smallresult] (ir3) at (7.6, -0.9) {Intermediate\\[-1pt]Result};
+
+			\draw[sarr] (ss1.south) -- (ir1.north);
+			\draw[sarr] (ss2.south) -- (ir2.north);
+			\draw[sarr] (ss3.south) -- (ir3.north);
+
+			% ── Aggregate ──
+			\node[task, font=\footnotesize\bfseries] (agg) at (6.4, -2.2) {Aggregate};
+
+			\draw[sarr] (ir1.south) -- (agg.north west);
+			\draw[sarr] (ir2.south) -- (agg.north);
+			\draw[sarr] (ir3.south) -- (agg.north east);
+
+			% Aggregate → Result (curves left to the shared Result node)
+			\draw[arr] (agg.south) .. controls +(0,-0.6) and +(3.5,0) .. (res.east);
+		}
+	\end{tikzpicture}
+
+	\note<1>{
+		\begin{itemize}
+			\item This is the simplest view of a compute workflow in ArmoniK.
+			      The user uploads input data, submits a single Solve task that
+			      depends on that data, and waits for the result.
+			\item From the user's perspective, this looks like a simple
+			      request-response pattern. But the key insight is that the
+			      Solve task itself can dynamically modify the execution graph
+			      at runtime — which is what we'll see on the next slide.
+			\item This is a real FSI pattern: a quant library receives market
+			      data and model parameters, then decides internally how to
+			      decompose the computation.
+		\end{itemize}
+	}
+	\note<2>{
+		\begin{itemize}
+			\item This is where dynamic graphs shine. The Solve task, at runtime,
+			      inspects the input data and decides it needs to decompose the
+			      problem further. It submits an entire subgraph: new data partitions,
+			      parallel Solve tasks, intermediate results, and an Aggregate step.
+			\item The compute library — not the orchestrator, not the user — makes
+			      this decision dynamically. The graph evolves based on actual data
+			      characteristics: data size, convergence criteria, model complexity.
+			\item This is a real FSI pattern. A pricing library receives a portfolio
+			      and decides to split it by counterparty, run XVA adjustments in
+			      parallel, then aggregate. The decomposition strategy depends on the
+			      portfolio contents — it cannot be known at submission time.
+			\item ArmoniK handles this natively: the Solve task submits child tasks
+			      and data nodes, delegates result production to the Aggregate task,
+			      and the platform manages scheduling, fault tolerance, and data
+			      lifecycle for the entire dynamically-created subgraph.
+		\end{itemize}
+	}
+\end{frame}
+
+%% ── END: Frames 4a–4b ──
+
+% Frame 5: Positioning
+\begin{frame}{ArmoniK}
+	\begin{alertblock}{What is ArmoniK?}
+		A production-ready, bipartite-DAG task orchestrator for critical environments
+		— making it easy to develop, observe, and operate distributed algorithms.
 	\end{alertblock}
 
-	Start with the problem statement: the need for a robust, scalable, and efficient platform to manage complex, long-running workloads across diverse environments.
-
-	Then introduce ArmoniK as the solution to this problem, highlighting its core capabilities and design principles.
-
-	Add slide about programming model+dynamic graphs
-
-	How AK differs from other.
-\end{frame}
-
-\begin{frame}{ArmoniK's envisioned capabilities}
-	\vspace{0.15cm}\centering
+	\vspace{0.1cm}
+	\centering
 	\begin{tikzpicture}[
-			b/.style={rectangle, rounded corners=4pt, fill=aneoblue, text=white,
-					font=\small\bfseries, minimum width=5.0cm, minimum height=0.75cm,
-					align=center},
-			bo/.style={b, fill=aneoorange, text=aneoblack}
-		]
-		\node[b]  at (0, 0.00) {Production Ready};
-		\node[b]  at (0,-0.95) {Fault Tolerant};
-		\node[b]  at (0,-1.90) {Malleable};
-		\node[bo] at (0,-2.85) {Data Aware};
-		\node[bo] at (0,-3.80) {Smart Scheduling};
-		\node[b]  at (5.4, 0.00) {Easy to Use \& Deploy};
-		\node[b]  at (5.4,-0.95) {Observable};
-		\node[b]  at (5.4,-1.90) {Portable};
-		\node[b]  at (5.4,-2.85) {Performant};
-		\node[b]  at (5.4,-3.80) {Open Source};
-
-		% Legend
-		\node[b,   minimum width=0.75cm, minimum height=0.45cm] at (0.80, -4.65) {};
-		\node[anchor=west, font=\tiny, text=aneoblack] at (1.25, -4.65) {Foundation capabilities};
-		\node[bo,  minimum width=0.75cm, minimum height=0.45cm] at (4.40, -4.65) {};
-		\node[anchor=west, font=\tiny, text=aneoblack] at (4.85, -4.65) {Key differentiators};
-	\end{tikzpicture}
-
-	\note
-	{
-		\begin{itemize}
-			\item \textbf{Production ready}, with support for security, scalability, and reliability.
-			\item \textbf{Easy to use and deploy}, with a user-friendly interface and comprehensive documentation.
-			\item \textbf{Fault tolerant}, with support for automatic recovery and rescheduling of failed tasks.
-			\item \textbf{Observable}, with support for monitoring and logging of task execution.
-			\item \textbf{Malleable}, with support for dynamic resource allocation.
-			\item \textbf{Portable}, with support for multiple platforms and cloud providers.
-			\item \textbf{Data aware}, with support for data locality and efficient data management.
-			\item \textbf{Performant}, with support for high-throughput and high-volume task execution.
-			\item \textbf{Smart scheduling}, with priority, preemption, and heterogeneous resource placement.
-			\item \textbf{Open source}, with a vibrant community of users and contributors.
-		\end{itemize}
-	}
-
-\end{frame}
-
-
-\begin{frame}{Production Ready}
-	\centering\vspace{0.2cm}
-	\begin{tikzpicture}[
-			card/.style={rectangle, rounded corners=5pt, text width=4.8cm,
-					align=left, inner sep=8pt, minimum width=5.5cm, minimum height=2.4cm}
+			card/.style={rectangle, rounded corners=5pt, text width=5.4cm,
+					align=left, inner sep=6pt, minimum width=5.8cm, minimum height=1.6cm}
 		]
 		\node[card, fill=aneoblue!12, draw=aneoblue!35] at (0, 0) {%
-		{\footnotesize\bfseries\color{aneoblue}Security}\\[3pt]
-		{\tiny\color{aneoblack}• Strict separation of Control, Data, and Compute Planes}\\[1pt]
-		{\tiny\color{aneoblack}• Encryption at rest and in transit}\\[1pt]
-		{\tiny\color{aneoblack}• Secure secret injection for workers}%
+		{\footnotesize\bfseries\color{aneoblue}Industry-Grade Scalability}\\[2pt]
+		{\tiny\color{aneoblack}Production-ready, high-throughput platform hardened in financial services \& critical environments}%
 		};
-		\node[card, fill=aneoturquoise!15, draw=aneoturquoise!40] at (6.0, 0) {%
-		{\footnotesize\bfseries\color{aneoturquoise!80!black}Reliability}\\[3pt]
-		{\tiny\color{aneoblack}• No single point of failure, automated failover}\\[1pt]
-		{\tiny\color{aneoblack}• Idempotent operations with well-defined state transitions}\\[1pt]
-		{\tiny\color{aneoblack}• Robust error handling under retries and failures}%
+		\node[card, fill=aneoturquoise!15, draw=aneoturquoise!40] at (6.2, 0) {%
+		{\footnotesize\bfseries\color{aneoturquoise!80!black}HPC Performance Techniques}\\[2pt]
+		{\tiny\color{aneoblack}Computation-communication overlapping, pipelining, and future HPC optimizations}%
 		};
-		\node[card, fill=aneoorange!12, draw=aneoorange!35] at (0, -2.9) {%
-		{\footnotesize\bfseries\color{aneoorange!80!black}Scalability}\\[3pt]
-		{\tiny\color{aneoblack}• Stateless components scale out under high concurrency}\\[1pt]
-		{\tiny\color{aneoblack}• Predictable behaviour at production scale}\\[1pt]
-		{\tiny\color{aneoblack}• Rate limiting and throttling per tenant}%
+		\node[card, fill=aneoorange!12, draw=aneoorange!35] at (0, -2.0) {%
+		{\footnotesize\bfseries\color{aneoorange!80!black}Developer-Centric \& Observable}\\[2pt]
+		{\tiny\color{aneoblack}Easy to use — rich APIs for observability, extensibility \& integration; focus on algorithms, not infra}%
 		};
-		\node[card, fill=aneoblue!8, draw=aneoblue!25] at (6.0, -2.9) {%
-		{\footnotesize\bfseries\color{aneoblue!70!black}Enterprise}\\[3pt]
-		{\tiny\color{aneoblack}• Tenant isolation, per-tenant quotas, noisy-neighbor prevention}\\[1pt]
-		{\tiny\color{aneoblack}• Identity integration and role separation}\\[1pt]
-		{\tiny\color{aneoblack}• Auditability and governance}%
+		\node[card, fill=aneoblue!8, draw=aneoblue!25] at (6.2, -2.0) {%
+		{\footnotesize\bfseries\color{aneoblue!70!black}Dynamic Bipartite DAG}\\[2pt]
+		{\tiny\color{aneoblack}Data as first-class graph citizens; DAG evolves at runtime based on data \& intermediate results}%
 		};
 	\end{tikzpicture}
 
-	\note
-	{
+	\vspace{0.15cm}
+	\centering{\tiny\color{aneoblack!50} Open source — Apache 2.0 License}
+
+	\note{
 		\begin{itemize}
-			\item \textbf{Security by Architecture:} Strict separation of Control, Data, and Compute Planes
-			\item \textbf{Data Protection:} Encryption at rest and in transit, secure secret injection for workers
-			\item \textbf{High Availability:} No single point of failure, automated failover and recovery
-			\item \textbf{Horizontal Scalability:} Stateless components scale out under high concurrency
-			\item \textbf{Robust Error Handling:} Idempotent operations with well-defined state transitions
-			\item \textbf{Multi-Tenancy:} Tenant isolation, per-tenant quotas, and noisy-neighbor prevention
-			\item \textbf{Enterprise Governance:} Identity integration, role separation, and auditability
+			\item So what is ArmoniK? It's a task orchestrator built on a bipartite DAG
+			      model — tasks and data are both first-class nodes in the execution
+			      graph. This isn't just an academic distinction; it's what enables
+			      data-aware scheduling and explicit data lifecycle management.
+			      Crucially, ArmoniK supports dynamic DAGs: the graph can be modified
+			      during execution, allowing algorithms whose structure depends on
+			      actual data and intermediate results — not just a static plan
+			      defined upfront.
+			\item ArmoniK targets critical, mission-critical applications — risk systems,
+			      regulatory computations, production trading systems. These are
+			      applications that absolutely cannot fail in production. Yet our
+			      developer-centric design means building these systems doesn't require
+			      infrastructure expertise. ArmoniK's mission is to ease using computing
+			      resources and ease the development of complex distributed algorithms.
+			\item The FSI-grade scalability comes from being battle-tested in financial
+			      services — high-throughput, production-hardened. The HPC performance
+			      techniques — computation-communication overlapping and pipelining —
+			      come from applying lessons learned in the HPC world, with plans to
+			      leverage additional techniques in the future.
+			\item And it's fully open source under the Apache 2.0 license. You can
+			      inspect, modify, and deploy it without vendor lock-in.
 		\end{itemize}
 	}
 \end{frame}
+
+%% ── END: Frame 5 ──
+%% ── END: Introduction frames ──
+
+% \begin{frame}{ArmoniK's envisioned capabilities}
+% 	\vspace{0.15cm}\centering
+% 	\begin{tikzpicture}[
+% 			b/.style={rectangle, rounded corners=4pt, fill=aneoblue, text=white,
+% 					font=\small\bfseries, minimum width=5.0cm, minimum height=0.75cm,
+% 					align=center},
+% 			bo/.style={b, fill=aneoorange, text=aneoblack}
+% 		]
+% 		\node[b]  at (0, 0.00) {Production Ready};
+% 		\node[b]  at (0,-0.95) {Fault Tolerant};
+% 		\node[b]  at (0,-1.90) {Malleable};
+% 		\node[bo] at (0,-2.85) {Data Aware};
+% 		\node[bo] at (0,-3.80) {Smart Scheduling};
+% 		\node[b]  at (5.4, 0.00) {Easy to Use \& Deploy};
+% 		\node[b]  at (5.4,-0.95) {Observable};
+% 		\node[b]  at (5.4,-1.90) {Portable};
+% 		\node[b]  at (5.4,-2.85) {Performant};
+% 		\node[b]  at (5.4,-3.80) {Open Source};
+
+% 		% Legend
+% 		\node[b,   minimum width=0.75cm, minimum height=0.45cm] at (0.80, -4.65) {};
+% 		\node[anchor=west, font=\tiny, text=aneoblack] at (1.25, -4.65) {Foundation capabilities};
+% 		\node[bo,  minimum width=0.75cm, minimum height=0.45cm] at (4.40, -4.65) {};
+% 		\node[anchor=west, font=\tiny, text=aneoblack] at (4.85, -4.65) {Key differentiators};
+% 	\end{tikzpicture}
+
+% 	\note
+% 	{
+% 		\begin{itemize}
+% 			\item \textbf{Production ready}, with support for security, scalability, and reliability.
+% 			\item \textbf{Easy to use and deploy}, with a user-friendly interface and comprehensive documentation.
+% 			\item \textbf{Fault tolerant}, with support for automatic recovery and rescheduling of failed tasks.
+% 			\item \textbf{Observable}, with support for monitoring and logging of task execution.
+% 			\item \textbf{Malleable}, with support for dynamic resource allocation.
+% 			\item \textbf{Portable}, with support for multiple platforms and cloud providers.
+% 			\item \textbf{Data aware}, with support for data locality and efficient data management.
+% 			\item \textbf{Performant}, with support for high-throughput and high-volume task execution.
+% 			\item \textbf{Smart scheduling}, with priority, preemption, and heterogeneous resource placement.
+% 			\item \textbf{Open source}, with a vibrant community of users and contributors.
+% 		\end{itemize}
+% 	}
+
+% \end{frame}
+
+
+% \begin{frame}{Production Ready}
+% 	\centering\vspace{0.2cm}
+% 	\begin{tikzpicture}[
+% 			card/.style={rectangle, rounded corners=5pt, text width=4.8cm,
+% 					align=left, inner sep=8pt, minimum width=5.5cm, minimum height=2.4cm}
+% 		]
+% 		\node[card, fill=aneoblue!12, draw=aneoblue!35] at (0, 0) {%
+% 		{\footnotesize\bfseries\color{aneoblue}Security}\\[3pt]
+% 		{\tiny\color{aneoblack}• Strict separation of Control, Data, and Compute Planes}\\[1pt]
+% 		{\tiny\color{aneoblack}• Encryption at rest and in transit}\\[1pt]
+% 		{\tiny\color{aneoblack}• Secure secret injection for workers}%
+% 		};
+% 		\node[card, fill=aneoturquoise!15, draw=aneoturquoise!40] at (6.0, 0) {%
+% 		{\footnotesize\bfseries\color{aneoturquoise!80!black}Reliability}\\[3pt]
+% 		{\tiny\color{aneoblack}• No single point of failure, automated failover}\\[1pt]
+% 		{\tiny\color{aneoblack}• Idempotent operations with well-defined state transitions}\\[1pt]
+% 		{\tiny\color{aneoblack}• Robust error handling under retries and failures}%
+% 		};
+% 		\node[card, fill=aneoorange!12, draw=aneoorange!35] at (0, -2.9) {%
+% 		{\footnotesize\bfseries\color{aneoorange!80!black}Scalability}\\[3pt]
+% 		{\tiny\color{aneoblack}• Stateless components scale out under high concurrency}\\[1pt]
+% 		{\tiny\color{aneoblack}• Predictable behaviour at production scale}\\[1pt]
+% 		{\tiny\color{aneoblack}• Rate limiting and throttling per tenant}%
+% 		};
+% 		\node[card, fill=aneoblue!8, draw=aneoblue!25] at (6.0, -2.9) {%
+% 		{\footnotesize\bfseries\color{aneoblue!70!black}Enterprise}\\[3pt]
+% 		{\tiny\color{aneoblack}• Tenant isolation, per-tenant quotas, noisy-neighbor prevention}\\[1pt]
+% 		{\tiny\color{aneoblack}• Identity integration and role separation}\\[1pt]
+% 		{\tiny\color{aneoblack}• Auditability and governance}%
+% 		};
+% 	\end{tikzpicture}
+
+% 	\note
+% 	{
+% 		\begin{itemize}
+% 			\item \textbf{Security by Architecture:} Strict separation of Control, Data, and Compute Planes
+% 			\item \textbf{Data Protection:} Encryption at rest and in transit, secure secret injection for workers
+% 			\item \textbf{High Availability:} No single point of failure, automated failover and recovery
+% 			\item \textbf{Horizontal Scalability:} Stateless components scale out under high concurrency
+% 			\item \textbf{Robust Error Handling:} Idempotent operations with well-defined state transitions
+% 			\item \textbf{Multi-Tenancy:} Tenant isolation, per-tenant quotas, and noisy-neighbor prevention
+% 			\item \textbf{Enterprise Governance:} Identity integration, role separation, and auditability
+% 		\end{itemize}
+% 	}
+% \end{frame}
 
 \begin{frame}{Easy to Use \& Deploy}
 	\begin{itemize}
@@ -291,7 +761,7 @@
 	\begin{tikzpicture}[
 			inp/.style={rectangle, rounded corners=3pt, fill=aneoblue!10,
 					draw=aneoblue!30, text=aneoblack, font=\footnotesize\bfseries,
-					minimum width=3.2cm, minimum height=0.6cm, align=center},
+					minimum width=4.0cm, minimum height=0.6cm, align=center},
 			sch/.style={rectangle, rounded corners=5pt, fill=aneoblue, text=white,
 					font=\small\bfseries, minimum width=2.4cm, minimum height=4.8cm,
 					align=center},
@@ -333,11 +803,11 @@
 	}
 \end{frame}
 
-\begin{frame}{Open Source}
-	\begin{itemize}
-		\item \textbf{Transparency:} Inspect, audit, and understand platform behavior
-		\item \textbf{Extensibility:} Adapt to domain-specific needs and custom integrations
-		\item \textbf{Open Ecosystems:} Standards-based portability and long-term sustainability
-		\item \textbf{Community-Driven:} Shared innovation, faster iteration, no vendor lock-in
-	\end{itemize}
-\end{frame}
+% \begin{frame}{Open Source}
+% 	\begin{itemize}
+% 		\item \textbf{Transparency:} Inspect, audit, and understand platform behavior
+% 		\item \textbf{Extensibility:} Adapt to domain-specific needs and custom integrations
+% 		\item \textbf{Open Ecosystems:} Standards-based portability and long-term sustainability
+% 		\item \textbf{Community-Driven:} Shared innovation, faster iteration, no vendor lock-in
+% 	\end{itemize}
+% \end{frame}

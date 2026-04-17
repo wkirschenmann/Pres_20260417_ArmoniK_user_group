@@ -1,4 +1,552 @@
 
 \section{The roadmap focuses on extending ArmoniK capabilities to meet evolving user needs.}
 
+%% ── Frame 1: Roadmap Overview ──
+\begin{frame}{Roadmap: Where ArmoniK Is Heading}
+  \centering
+  \begin{tikzpicture}[
+    pillar/.style={
+      rectangle, rounded corners=5pt,
+      minimum width=4.8cm, minimum height=2.8cm,
+      inner sep=8pt, align=left
+    },
+    convergence/.style={
+      rectangle, rounded corners=5pt,
+      fill=aneoorange!15, draw=aneoorange!40,
+      text=aneoblack, font=\footnotesize\bfseries,
+      minimum width=5.5cm, minimum height=0.8cm,
+      align=center
+    }
+  ]
+    % Left pillar — Easier to Use
+    \node[pillar, fill=aneoturquoise!12, draw=aneoturquoise!40,
+          anchor=north east] (left) at (-0.3,0)
+      {\parbox{4.4cm}{{\footnotesize\bfseries\color{aneoturquoise!80!black}Easier to Use}\\[4pt]
+       {\tiny
+        --~Deployment portability\\
+        --~Security \& access control\\
+        --~Observability \& testing}}};
 
+    % Right pillar — More Performant
+    \node[pillar, fill=aneoblue!12, draw=aneoblue!35,
+          anchor=north west] (right) at (0.3,0)
+      {\parbox{4.4cm}{{\footnotesize\bfseries\color{aneoblue}More Performant}\\[4pt]
+       {\tiny
+        --~Persistence \& control plane\\
+        --~Scaling \& multi-region\\
+        --~Scheduling \& data management}}};
+
+    % Convergence box
+    \node[convergence] (conv) at (0,-3.8)
+      {Managed PaaS\;\;\textperiodcentered\;\;Custom Deployable};
+
+    % Arrows from pillars to convergence
+    \draw[-Stealth, thick, aneoblack!40] (left.south)  -- (conv.north -| left.south);
+    \draw[-Stealth, thick, aneoblack!40] (right.south) -- (conv.north -| right.south);
+  \end{tikzpicture}
+
+  \note{
+    \begin{itemize}
+      \item The roadmap is organized around two pillars: making ArmoniK easier
+            to use and making it more performant. These aren't separate tracks —
+            they reinforce each other. A faster platform that's hard to deploy
+            doesn't help anyone, and an easy platform that can't perform doesn't
+            meet our users' needs.
+      \item The dual delivery model is the strategic target that ties everything
+            together. We're building ArmoniK so it can be consumed as a turnkey
+            managed PaaS — where we operate the control plane and you keep your
+            data and compute in your own tenant — while also remaining fully
+            deployable in custom environments: on-premises, bare metal,
+            supercomputers. Every roadmap topic contributes to one or both of
+            these delivery models.
+      \item Let me walk you through the five thematic groups. We'll start with
+            the core engine — persistence and control plane — then move outward
+            to scaling, deployment portability, security and observability, and
+            finally advanced scheduling and ecosystem integration.
+    \end{itemize}
+  }
+\end{frame}
+
+%% ── Frame 2: Persistence, Control Plane & Performance Optimization ──
+\begin{frame}{Core Engine: Persistence \& Control Plane}
+  \centering
+  \begin{tikzpicture}[
+    layer/.style={
+      rectangle, rounded corners=4pt,
+      text width=10.5cm, align=left,
+      inner sep=6pt, minimum height=1.0cm
+    }
+  ]
+    % Bottom layer — SQL Migration (darkest)
+    \node[layer, fill=aneoblue, text=white] (sql) at (0,0)
+      {{\footnotesize\bfseries SQL Migration}\\[2pt]
+       {\tiny From NoSQL to SQL\;\textperiodcentered\;Consistency \& scalability\;\textperiodcentered\;Managed DB services}};
+
+    % Layer 2 — Control Plane Refactoring
+    \node[layer, fill=aneoblue!25, draw=aneoblue!40, text=aneoblack,
+          anchor=south] (refactor) at ([yshift=4pt]sql.north)
+      {{\footnotesize\bfseries Control Plane Refactoring}\\[2pt]
+       {\tiny Stateless scheduling\;\textperiodcentered\;Decoupled from DB \& queue\;\textperiodcentered\;Idempotent RPC APIs}};
+
+    % Layer 3 — Control Plane Optimization
+    \node[layer, fill=aneoblue!15, draw=aneoblue!30, text=aneoblack,
+          anchor=south] (optim) at ([yshift=4pt]refactor.north)
+      {{\footnotesize\bfseries Control Plane Optimization}\\[2pt]
+       {\tiny Batched operations\;\textperiodcentered\;Task prefetching\;\textperiodcentered\;Reduced database round-trips}};
+
+    % Top layer — Data Plane Isolation (lightest)
+    \node[layer, fill=aneoblue!8, draw=aneoblue!20, text=aneoblack,
+          anchor=south] (dataplane) at ([yshift=4pt]optim.north)
+      {{\footnotesize\bfseries Data Plane Isolation}\\[2pt]
+       {\tiny Dedicated Data Agent\;\textperiodcentered\;Separation of control and data traffic}};
+
+    % Left-side rotated annotation
+    \node[font=\tiny\itshape, text=aneoblack!50, rotate=90]
+      at ([xshift=-6.2cm]{{barycentric cs:sql=0.5,dataplane=0.5}})
+      {Foundation\;$\rightarrow$\;Surface};
+  \end{tikzpicture}
+
+  \note{
+    \begin{itemize}
+      \item The foundation of everything is the SQL migration. We're moving from
+            MongoDB to a SQL relational database. Why? Three reasons: strong
+            consistency instead of eventual consistency, better scalability
+            patterns for our access patterns, and --- critically --- easier access
+            to managed database services. Whether you're in the cloud using RDS
+            or Aurora, or on-premises where your IT department already operates
+            PostgreSQL, SQL is the lingua franca. This directly enables the
+            managed PaaS model.
+      \item On top of that, we're refactoring the control plane for horizontal
+            scalability. Today, agents are coupled to the database and queue.
+            We're decoupling them into a stateless scheduling service with
+            idempotent RPC APIs. This means you can scale the control plane
+            horizontally --- add more instances under load --- without worrying
+            about state conflicts.
+      \item The optimization layer is about raw throughput: batching database
+            operations, prefetching tasks, reducing the number of database
+            round-trips per scheduling cycle. And at the top, data plane
+            isolation gives us a dedicated Data Agent that separates control
+            traffic from data traffic, preventing large data transfers from
+            starving the scheduler.
+    \end{itemize}
+  }
+\end{frame}
+
+%% ── Frame 3: Cloud-Native Scaling, Multi-Region & Disaster Recovery ──
+\begin{frame}{Scaling \& Multi-Region Resilience}
+  \centering
+  \begin{tikzpicture}[
+    regionbox/.style={
+      rectangle, rounded corners=6pt,
+      draw=aneoturquoise!50, fill=aneoturquoise!5,
+      minimum width=4.5cm, minimum height=3.5cm
+    },
+    regionlabel/.style={
+      font=\footnotesize\bfseries, text=aneoturquoise!80!black
+    },
+    partbox/.style={
+      rectangle, rounded corners=3pt,
+      fill=aneoturquoise!20, draw=aneoturquoise!40,
+      font=\tiny\bfseries, text=aneoblack,
+      minimum width=3.2cm, minimum height=0.6cm, align=center
+    },
+    storagebox/.style={
+      rectangle, rounded corners=3pt,
+      fill=aneoblue!10, draw=aneoblue!30,
+      font=\tiny, text=aneoblack,
+      minimum width=3.2cm, minimum height=0.5cm, align=center
+    },
+    routingnode/.style={
+      rectangle, rounded corners=4pt,
+      fill=aneoorange!20, draw=aneoorange!50,
+      font=\tiny\bfseries, text=aneoblack,
+      minimum width=2.0cm, minimum height=0.7cm, align=center
+    }
+  ]
+    % Region A (left)
+    \node[regionbox] (regA) at (-4,0) {};
+    \node[regionlabel, anchor=north] at (regA.north) {Region A};
+    \node[partbox]    (partA) at ([yshift=0.2cm]regA.center) {Partitions + Autoscaling};
+    \node[storagebox] (storA) at ([yshift=-1.0cm]regA.center) {SQL + Obj Storage};
+
+    % Region B (right)
+    \node[regionbox] (regB) at (4,0) {};
+    \node[regionlabel, anchor=north] at (regB.north) {Region B};
+    \node[partbox]    (partB) at ([yshift=0.2cm]regB.center) {Partitions + Autoscaling};
+    \node[storagebox] (storB) at ([yshift=-1.0cm]regB.center) {SQL + Obj Storage};
+
+    % Central routing node
+    \node[routingnode] (routing) at (0,0.2) {Workload\\Routing};
+
+    % Bidirectional arrows: routing ↔ regions
+    \draw[-Stealth, thick, aneoorange!70] (routing.west) -- (partA.east);
+    \draw[-Stealth, thick, aneoorange!70] (partA.east)   -- (routing.west);
+    \draw[-Stealth, thick, aneoorange!70] (routing.east) -- (partB.west);
+    \draw[-Stealth, thick, aneoorange!70] (partB.west)   -- (routing.east);
+
+    % Dashed replication arrow between storage boxes
+    \draw[-Stealth, dashed, aneoblue!50] (storA.east) -- (storB.west)
+      node[midway, above, font=\tiny\itshape, text=aneoblue!60] {replication};
+
+    % Region Bursting annotation
+    \node[font=\tiny\itshape, text=aneoorange!80] at (0,-2.6)
+      {Region Bursting\quad{\upshape(isolated data planes)}};
+  \end{tikzpicture}
+
+  \note{
+    \begin{itemize}
+      \item This frame is about making ArmoniK a globally resilient platform.
+            It starts with a Kubernetes-native autoscaling operator that uses
+            Prometheus metrics and Karpenter to scale across multiple clusters
+            and regions. Combined with automated partition provisioning — where
+            partitions are declared and a partition operator handles the rest —
+            this gives you elastic, self-managing infrastructure.
+      \item The routing layer is where it gets interesting. Workload routing
+            uses metrics to decide where sessions land — which region, which
+            cluster. It supports region-aware placement for latency and
+            compliance, and on-prem to cloud overflow when local capacity is
+            exhausted. This is critical for hybrid deployments.
+      \item Disaster recovery is built on three pillars: globally distributed
+            SQL for metadata, rebuildable queues that can be reconstructed from
+            the database, and cross-region object storage replication for data.
+            Region bursting extends this further — when one region is saturated,
+            workloads overflow to another region with isolated data planes, so
+            there's no data leakage between regions.
+    \end{itemize}
+  }
+\end{frame}
+
+%% ── Frame 4: Deployment Portability ──
+\begin{frame}{Deployment Portability}
+  \centering
+  \begin{tikzpicture}[
+    card/.style={
+      rectangle, rounded corners=5pt,
+      minimum width=2.6cm, minimum height=2.4cm,
+      text width=2.2cm, align=center, inner sep=5pt
+    }
+  ]
+    % Spectrum line with arrowheads
+    \draw[draw=aneoblack!30, thick, {Stealth}-{Stealth}]
+      (-6,0) -- (6,0);
+    \node[font=\tiny\bfseries, text=aneoblack!60, anchor=east]
+      at (-6.15,0) {Managed};
+    \node[font=\tiny\bfseries, text=aneoblack!60, anchor=west]
+      at (6.15,0) {Custom};
+
+    % Card 1 — Cloud Marketplace
+    \node[card, fill=aneoorange!20, draw=aneoorange!50] (mp) at (-4.2,-2.0)
+      {{\footnotesize\bfseries\color{aneoblack}Cloud\\Marketplace}\\[4pt]
+       {\tiny Billing integration\;\textperiodcentered\;Simplified adoption}};
+
+    % Card 2 — Cloud IaaS / K8s
+    \node[card, fill=aneoorange!12, draw=aneoorange!35] (iaas) at (-1.4,-2.0)
+      {{\footnotesize\bfseries\color{aneoblack}Cloud\\IaaS / K8s}\\[4pt]
+       {\tiny Helm + Terraform\;\textperiodcentered\;Reference deployments}};
+
+    % Card 3 — Bare Metal
+    \node[card, fill=aneoorange!8, draw=aneoorange!25] (bare) at (1.4,-2.0)
+      {{\footnotesize\bfseries\color{aneoblack}Bare Metal}\\[4pt]
+       {\tiny Process-based lifecycle\;\textperiodcentered\;No Kubernetes required}};
+
+    % Card 4 — Supercomputer
+    \node[card, fill=aneoorange!5, draw=aneoorange!15] (hpc) at (4.2,-2.0)
+      {{\footnotesize\bfseries\color{aneoblack}Supercomputer}\\[4pt]
+       {\tiny Slurm integration\;\textperiodcentered\;HPC cluster environments}};
+
+    % Connector ticks from spectrum line to cards
+    \draw[aneoblack!20] (-4.2,0) -- (-4.2,-0.8);
+    \draw[aneoblack!20] (-1.4,0) -- (-1.4,-0.8);
+    \draw[aneoblack!20] (1.4,0)  -- (1.4,-0.8);
+    \draw[aneoblack!20] (4.2,0)  -- (4.2,-0.8);
+
+    % Dual Delivery bracket — simple line approach (no decorations library)
+    % Managed PaaS span
+    \draw[thick, aneoturquoise!60] (-5.5,-3.7) -- (-5.5,-3.9) -- (-0.1,-3.9) -- (-0.1,-3.7);
+    \node[font=\tiny\bfseries, text=aneoturquoise!80!black] at (-2.8,-4.25)
+      {Managed PaaS};
+
+    % Custom Deployable span
+    \draw[thick, aneoblue!50] (0.1,-3.7) -- (0.1,-3.9) -- (5.5,-3.9) -- (5.5,-3.7);
+    \node[font=\tiny\bfseries, text=aneoblue] at (2.8,-4.25)
+      {Custom Deployable};
+  \end{tikzpicture}
+
+  \note{
+    \begin{itemize}
+      \item Deployment portability is what makes the dual delivery model real.
+            On the left end of the spectrum, we have the cloud marketplace —
+            one-click deployment with billing integration, the fastest path to
+            getting started. Next to it, the standard cloud IaaS deployment
+            with Helm and Terraform that our current users know well.
+      \item Moving right, bare metal deployment is about running ArmoniK
+            without Kubernetes at all. Some environments — especially in
+            regulated industries or legacy infrastructure — can't or won't
+            run Kubernetes. We're building a process-based lifecycle manager
+            that handles worker provisioning and health monitoring directly
+            on bare metal.
+      \item At the far right, supercomputer deployment integrates with Slurm,
+            the dominant job scheduler in HPC. This opens ArmoniK to the
+            scientific computing community — nuclear fusion simulations,
+            seismic imaging, automotive crash simulations — where
+            supercomputers are the primary compute resource. Together, these
+            four deployment models mean ArmoniK truly runs anywhere.
+    \end{itemize}
+  }
+\end{frame}
+
+%% ── Frame 5: Security, Quality & Observability ──
+\begin{frame}{Security, Quality \& Observability}
+  \begin{columns}[T]
+
+    %% Left column — Security & Access Control
+    \begin{column}{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        card/.style={
+          rectangle, rounded corners=4pt,
+          text width=4.4cm, minimum width=4.8cm,
+          minimum height=1.1cm, align=left, inner sep=5pt
+        }
+      ]
+        % Card 1 — Secure Data Access
+        \node[card, fill=aneoblue!12, draw=aneoblue!35] (sda) at (0,0)
+          {{\footnotesize\bfseries\color{aneoblue}Secure Data Access}\\[2pt]
+           {\tiny Token-based authorization\;\textperiodcentered\;Tenant isolation\;\textperiodcentered\;Decoupled data management}};
+
+        % Card 2 — User Management & Access Control
+        \node[card, fill=aneoblue!8, draw=aneoblue!25,
+              anchor=north] (umac) at ([yshift=-6pt]sda.south)
+          {{\footnotesize\bfseries\color{aneoblue!70!black}User Management \& Access Control}\\[2pt]
+           {\tiny RBAC/ABAC\;\textperiodcentered\;SSO \& identity federation\;\textperiodcentered\;Multi-tenant isolation}};
+      \end{tikzpicture}
+    \end{column}
+
+    %% Right column — Quality & Observability
+    \begin{column}{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        card/.style={
+          rectangle, rounded corners=4pt,
+          text width=4.4cm, minimum width=4.8cm,
+          minimum height=1.1cm, align=left, inner sep=5pt
+        }
+      ]
+        % Card 3 — Non-Regression Testing
+        \node[card, fill=aneoturquoise!10, draw=aneoturquoise!30] (nrt) at (0,0)
+          {{\footnotesize\bfseries\color{aneoturquoise!80!black}Non-Regression Testing}\\[2pt]
+           {\tiny Automated test suites\;\textperiodcentered\;Performance benchmarks\;\textperiodcentered\;Release quality gates}};
+
+        % Card 4 — Functional Observability
+        \node[card, fill=aneoturquoise!15, draw=aneoturquoise!40,
+              anchor=north] (fobs) at ([yshift=-6pt]nrt.south)
+          {{\footnotesize\bfseries\color{aneoturquoise!80!black}Functional Observability}\\[2pt]
+           {\tiny Critical path analysis\;\textperiodcentered\;Task metrics comparison across runs}};
+
+        % Card 5 — Unified Infrastructure Observability
+        \node[card, fill=aneoturquoise!20, draw=aneoturquoise!50,
+              anchor=north] (iobs) at ([yshift=-6pt]fobs.south)
+          {{\footnotesize\bfseries\color{aneoturquoise!80!black}Unified Infrastructure Observability}\\[2pt]
+           {\tiny Centralized dashboard\;\textperiodcentered\;Hardware, network \& application metrics}};
+      \end{tikzpicture}
+    \end{column}
+
+  \end{columns}
+
+  \note{
+    \begin{itemize}
+      \item Security is non-negotiable for our users in regulated industries.
+            The secure data access architecture introduces token-based
+            authorization with tenant isolation — each tenant's data is
+            cryptographically separated. User management adds RBAC and ABAC
+            with SSO integration, so enterprises can plug ArmoniK into their
+            existing identity infrastructure.
+      \item Non-regression testing is about operational confidence. Every
+            release goes through automated test suites and performance
+            benchmarks. If a change degrades throughput or introduces a
+            regression, we catch it before it reaches production. This is
+            especially important for the managed PaaS model where we're
+            responsible for the control plane.
+      \item Observability splits into two layers. Functional observability
+            gives you insight into your algorithms — critical path analysis,
+            comparing task metrics across runs to spot performance regressions
+            in your code. Infrastructure observability gives operators a
+            centralized dashboard covering hardware utilization, network
+            health, and application metrics. Together, they close the loop
+            from "something is slow" to "here's exactly why."
+    \end{itemize}
+  }
+\end{frame}
+
+%% ── Frame 6: Advanced Scheduling, Data Management & Ecosystem Integration ──
+\begin{frame}{Scheduling, Data Management \& Ecosystem}
+  \begin{columns}[T]
+
+    %% Left column — Scheduling & Data Management
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        card/.style={
+          rectangle, rounded corners=4pt,
+          text width=5.0cm, align=left, inner sep=5pt,
+          minimum width=5.4cm, minimum height=1.0cm
+        }
+      ]
+        % Card 1 — Advanced Scheduling
+        \node[card, fill=aneoturquoise!15, draw=aneoturquoise!40] (sched) at (0,0)
+          {{\footnotesize\bfseries\color{aneoturquoise!80!black}Advanced Scheduling}\\[2pt]
+           {\tiny\color{aneoblack}Fair share\;\textperiodcentered\;Metric-driven\;\textperiodcentered\;Task \& data affinity}};
+
+        % Card 2 — Data Dependencies
+        \node[card, fill=aneoturquoise!10, draw=aneoturquoise!30,
+              anchor=north] (deps) at ([yshift=-10pt]sched.south)
+          {{\footnotesize\bfseries\color{aneoturquoise!80!black}Data Dependencies}\\[2pt]
+           {\tiny\color{aneoblack}Optional\;\textperiodcentered\;Lazy\;\textperiodcentered\;Lazy-optional categories}};
+
+        % Card 3 — Task Checkpointing
+        \node[card, fill=aneoturquoise!8, draw=aneoturquoise!25,
+              anchor=north] (ckpt) at ([yshift=-10pt]deps.south)
+          {{\footnotesize\bfseries\color{aneoturquoise!80!black}Task Checkpointing}\\[2pt]
+           {\tiny\color{aneoblack}Save \& restore state for fault recovery}};
+
+        % Connecting arrows
+        \draw[-Stealth, thick, aneoturquoise!60] (sched.south) -- (deps.north);
+        \draw[-Stealth, thick, aneoturquoise!60] (deps.south)  -- (ckpt.north);
+      \end{tikzpicture}
+    \end{column}
+
+    %% Right column — OpenGRIS Integration
+    \begin{column}{0.42\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \node[rectangle, rounded corners=5pt,
+              fill=aneoorange!15, draw=aneoorange!40,
+              text width=4.0cm, align=left, inner sep=8pt,
+              minimum width=4.4cm, minimum height=3.0cm] (ogris) at (0,0)
+          {{\footnotesize\bfseries\color{aneoorange!80!black}OpenGRIS Integration}\\[6pt]
+           {\small
+            \textbullet\;ParFun SDK\\
+            \textbullet\;ParGraph SDK\\
+            \textbullet\;Scaler Metascheduler}\\[6pt]
+           {\tiny\itshape\color{aneoblack!50}Ecosystem reach}};
+      \end{tikzpicture}
+    \end{column}
+
+  \end{columns}
+
+  \note{
+    \begin{itemize}
+      \item Advanced scheduling is about making ArmoniK smarter about where
+            and when tasks run. Fair share scheduling ensures no single user
+            monopolizes the cluster. Metric-driven scheduling uses runtime
+            telemetry to make placement decisions. And task-data affinity
+            scheduling co-locates tasks with their data — this ties directly
+            back to the data-aware architecture we discussed in the vision
+            section.
+      \item Data dependency management introduces three new categories beyond
+            the current mandatory dependencies: optional data that tasks can
+            proceed without, lazy data that's fetched on demand rather than
+            prefetched, and lazy-optional combining both. This gives developers
+            fine-grained control over the performance-correctness tradeoff.
+            Task checkpointing complements this by letting long-running tasks
+            save their state periodically, so a failure doesn't mean starting
+            from scratch.
+      \item OpenGRIS integration is our bridge to the broader HPC ecosystem.
+            ParFun and ParGraph are SDKs for expressing parallel computations,
+            and the Scaler metascheduler enables ArmoniK to participate in
+            multi-runtime scheduling. This positions ArmoniK not as an
+            isolated platform but as a first-class citizen in the emerging
+            HPC standards landscape.
+    \end{itemize}
+  }
+\end{frame}
+
+%% ── Frame 7: Roadmap Summary ──
+\begin{frame}{Roadmap Summary}
+  \centering
+  \begin{tikzpicture}[
+    banner/.style={
+      rectangle, rounded corners=5pt,
+      fill=aneoblue, text=white,
+      font=\small\bfseries,
+      text width=10cm, align=center,
+      minimum height=0.7cm, inner sep=5pt
+    },
+    grouplabel/.style={
+      font=\tiny\bfseries, text=aneoblack
+    },
+    dualbox/.style={
+      rectangle, rounded corners=5pt,
+      minimum width=5.5cm, minimum height=1.6cm,
+      draw=aneoblack!30, inner sep=0pt
+    }
+  ]
+    % Top banner
+    \node[banner] (banner) at (0,0)
+      {Easier to use\;\textperiodcentered\;More performant};
+
+    % Five thematic group labels on the left
+    \node[grouplabel] (g1) at (-3.8,-1.4)
+      {\tikz\fill[aneoblue] (0,0) circle (2.5pt); \;Persistence \& Control Plane};
+    \node[grouplabel] (g2) at (-3.8,-1.9)
+      {\tikz\fill[aneoturquoise] (0,0) circle (2.5pt); \;Scaling \& Multi-Region};
+    \node[grouplabel] (g3) at (-3.8,-2.4)
+      {\tikz\fill[aneoorange] (0,0) circle (2.5pt); \;Deployment Portability};
+    \node[grouplabel] (g4) at (-3.8,-2.9)
+      {\tikz\fill[aneoblue!70!black] (0,0) circle (2.5pt); \;Security \& Observability};
+    \node[grouplabel] (g5) at (-3.8,-3.4)
+      {\tikz\fill[aneoturquoise!80!black] (0,0) circle (2.5pt); \;Scheduling \& Ecosystem};
+
+    % Dual Delivery box (outer container)
+    \node[dualbox] (dual) at (2.8,-2.4) {};
+
+    % Top half — Managed PaaS
+    \node[rectangle, rounded corners=5pt,
+          fill=aneoturquoise!20, text=aneoturquoise!80!black,
+          font=\footnotesize\bfseries,
+          minimum width=5.3cm, minimum height=0.7cm,
+          anchor=south, inner sep=4pt]
+      (paas) at ([yshift=1pt]dual.center) {Managed PaaS};
+
+    % Bottom half — Custom Deployable
+    \node[rectangle, rounded corners=5pt,
+          fill=aneoorange!15, text=aneoorange!80!black,
+          font=\footnotesize\bfseries,
+          minimum width=5.3cm, minimum height=0.7cm,
+          anchor=north, inner sep=4pt]
+      (custom) at ([yshift=-1pt]dual.center) {Custom Deployable};
+
+    % Convergence arrows from labels to Dual Delivery box
+    \draw[-Stealth, thick, aneoblack!40] (g1.east) -- (dual.west |- g1.east);
+    \draw[-Stealth, thick, aneoblack!40] (g2.east) -- (dual.west |- g2.east);
+    \draw[-Stealth, thick, aneoblack!40] (g3.east) -- (dual.west |- g3.east);
+    \draw[-Stealth, thick, aneoblack!40] (g4.east) -- (dual.west |- g4.east);
+    \draw[-Stealth, thick, aneoblack!40] (g5.east) -- (dual.west |- g5.east);
+
+    % Bottom annotations
+    \node[font=\small\itshape, text=aneoblack!60, align=center]
+      at (0,-4.6)
+      {A vision and priority list, not a timeline\\[2pt]
+       Customer collaboration accelerates specific topics};
+  \end{tikzpicture}
+
+  \note{
+    \begin{itemize}
+      \item Let me bring it all together. Everything we've discussed --- the SQL
+            migration, the control plane refactoring, multi-region resilience,
+            deployment portability, security, observability, advanced scheduling
+            --- all of it converges on one strategic target: delivering ArmoniK
+            both as a managed PaaS and as a custom deployable solution.
+      \item I want to be clear about what this roadmap is and isn't. It's a
+            vision and a priority list. It's not a Gantt chart with fixed
+            dates. Development moves forward continuously --- we ship every
+            4 to 6 weeks --- and we onboard new customers at the same time.
+            Priorities shift based on what our users need most.
+      \item And that's the last point: customer collaboration shapes this
+            roadmap. Some topics are accelerated because a specific customer
+            needs them. If you see something on this roadmap that matters to
+            your organization, talk to us --- that's how topics move up the
+            priority list. With that, let's open it up for questions.
+    \end{itemize}
+  }
+\end{frame}
